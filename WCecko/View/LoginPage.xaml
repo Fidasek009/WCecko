@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+            x:Class="WCecko.LoginPage"
+            xmlns:vm="clr-namespace:WCecko.ViewModel"
+            x:DataType="vm:LoginViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout  
+           Padding="30,0"  
+           Spacing="25">
+            <Image  
+               Source="dotnet_bot.png"  
+               HeightRequest="185"  
+               Aspect="AspectFit"  
+               SemanticProperties.Description="dot net bot in a race car number eight" />
+
+            <Label
+               Text="Log in!"
+               Style="{StaticResource Headline}"
+               SemanticProperties.HeadingLevel="Level1" />
+
+            <Entry
+               Text="{Binding Username}"
+               Placeholder="Username"
+               SemanticProperties.Hint="Enter your username" />
+
+            <Entry
+                Text="{Binding Password}"
+                Placeholder="Password"
+                IsPassword="True"
+                SemanticProperties.Hint="Enter your password" />
+
+            <Button
+               Text="Log in"
+               SemanticProperties.Hint="Click to log in"
+               Command="{Binding LoginCommand}"
+               HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
