@@ -19,7 +19,7 @@ namespace WCecko
             map.Layers.Add(OpenStreetMap.CreateTileLayer());
             map.Widgets.Add(new MapInfoWidget(map));
 
-            Content = mapControl;
+            MapContainer.Children.Add(mapControl);
         }
     }
 }

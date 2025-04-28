@@ -6,4 +6,42 @@
              x:DataType="vm:MainViewModel">
 
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Label
+            Text="{Binding Username}"
+            FontSize="24"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Margin="12" />
+
+        <Label
+            Grid.Column="1"
+            Text="WCecko"
+            FontSize="32"
+            Margin="12"
+            HorizontalOptions="Center" />
+
+        <Button
+            Grid.Column="2" 
+            Text="Log out"
+            FontSize="16"
+            Margin="12"
+            Command="{Binding LogoutCommand}"/>
+
+        <Grid
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            x:Name="MapContainer" />
+    </Grid>
+
 </ContentPage>
