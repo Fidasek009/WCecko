@@ -17,6 +17,11 @@ public partial class RegisterViewModel : ObservableObject
     [RelayCommand]
     async Task Register()
     {
-        await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+        await Shell.Current.GoToAsync($"//{nameof(MainPage)}",
+            new Dictionary<string, object>
+            {
+                { "Username", Username }
+            }
+        );
     }
 }

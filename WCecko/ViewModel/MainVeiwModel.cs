@@ -5,11 +5,12 @@ using Mapsui;
 using Mapsui.Layers;
 using Mapsui.UI.Maui;
 using Mapsui.Extensions;
+using CommunityToolkit.Maui.Views;
 
 using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 using WCecko.Model;
-
+using WCecko.View;
 
 namespace WCecko.ViewModel;
 
@@ -43,11 +44,15 @@ public partial class MainViewModel : ObservableObject
                 var mapPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
                 var newPoint = MapModel.CreatePoint(mapPosition);
                 var features = pointsLayer!.Features?.ToList() ?? new List<IFeature>();
-                
+
                 features.Add(newPoint);
                 pointsLayer.Features = features;
                 pointsLayer.DataHasChanged();
                 mapControl.Map.Refresh();
+
+                // Corrected the usage of ShowPopupAsync to pass an instance of CreatePlacePopup
+                var popup = new CreatePlacePopup(new CreatePlaceViewModel());
+                await Shell.Current.CurrentPage.ShowPopupAsync(popup);
             }
             else
             {
@@ -92,7 +97,7 @@ public partial class MainViewModel : ObservableObject
                     $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
                     "OK");
 
-                // TODO
+                // TODO: show place info
             });
 
             e.Handled = true;

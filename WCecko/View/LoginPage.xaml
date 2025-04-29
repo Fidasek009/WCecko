@@ -5,50 +5,55 @@
             xmlns:vm="clr-namespace:WCecko.ViewModel"
             x:DataType="vm:LoginViewModel">
 
-    <ScrollView>
-        <VerticalStackLayout
-           Padding="30,0"
-           Spacing="25"
-           WidthRequest="500"
-           VerticalOptions="Center"
-           HorizontalOptions="Center">
-            <Image
-               Source="logo.png"
-               HeightRequest="192"
-               Aspect="AspectFit"
-               SemanticProperties.Description="logo" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{OnPlatform Android=0.05*, iOS=0.1*, WinUI=0.35*}" />
+            <ColumnDefinition Width="{OnPlatform Android=0.9*, iOS=0.8*, WinUI=0.3*}" />
+            <ColumnDefinition Width="{OnPlatform Android=0.05*, iOS=0.1*, WinUI=0.35*}" />
+        </Grid.ColumnDefinitions>
 
-            <Label
-               Text="Log in!"
-               Style="{StaticResource Headline}"
-               SemanticProperties.HeadingLevel="Level1" />
+        <ScrollView Grid.Column="1">
+            <VerticalStackLayout
+               Padding="30,0"
+               Spacing="25"
+               VerticalOptions="Center">
+                <Image
+                   Source="logo.png"
+                   HeightRequest="192"
+                   Aspect="AspectFit"
+                   SemanticProperties.Description="logo" />
 
-            <Entry
-               Text="{Binding Username}"
-               Placeholder="Username"
-               SemanticProperties.Hint="Enter your username" />
+                <Label
+                   Text="Log in!"
+                   Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" />
 
-            <Entry
-                Text="{Binding Password}"
-                Placeholder="Password"
-                IsPassword="True"
-                SemanticProperties.Hint="Enter your password" />
+                <Entry
+                   Text="{Binding Username}"
+                   Placeholder="Username"
+                   SemanticProperties.Hint="Enter your username" />
 
-            <Button
-               Text="Log in"
-               SemanticProperties.Hint="Click to log in"
-               Command="{Binding LoginCommand}"/>
+                <Entry
+                    Text="{Binding Password}"
+                    Placeholder="Password"
+                    IsPassword="True"
+                    SemanticProperties.Hint="Enter your password" />
 
-            <Label
-                Text="Don't have an account?"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"/>
+                <Button
+                   Text="Log in"
+                   SemanticProperties.Hint="Click to log in"
+                   Command="{Binding LoginCommand}"/>
 
-            <Button
-                Text="Register"
-                SemanticProperties.Hint="Click to register"
-                Command="{Binding RegisterCommand}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                <Label
+                    Text="Don't have an account?"
+                    Style="{StaticResource SubHeadline}"
+                    SemanticProperties.HeadingLevel="Level2"/>
 
+                <Button
+                    Text="Register"
+                    SemanticProperties.Hint="Click to register"
+                    Command="{Binding RegisterCommand}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

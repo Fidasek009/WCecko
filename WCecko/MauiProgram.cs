@@ -1,6 +1,8 @@
 ﻿using WCecko.ViewModel;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using CommunityToolkit.Maui;
+using WCecko.View;
 
 namespace WCecko;
 
@@ -12,6 +14,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .UseSkiaSharp(true)
             .ConfigureFonts(fonts =>
             {
@@ -25,6 +28,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<RegisterViewModel>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
+        // builder.Services.AddTransient<CreatePlacePopup>();
 
 #if DEBUG
         builder.Logging.AddDebug();
