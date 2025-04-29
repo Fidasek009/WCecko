@@ -19,7 +19,7 @@ namespace WCecko.ViewModel
         {
             if (Username == USERNAME && Password == PASSWORD)
             {
-                await Shell.Current.GoToAsync(nameof(MainPage),
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}",
                     new Dictionary<string, object>
                     {
                         { "Username", Username }

@@ -22,7 +22,7 @@ namespace WCecko.ViewModel
         [RelayCommand]
         async Task Logout()
         {
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
 
         public async void OnMapLongTapped(object? sender, TappedEventArgs e)
@@ -85,18 +85,15 @@ namespace WCecko.ViewModel
                 var y = double.Parse(XY[1]);
                 var position = new MPoint(x, y);
 
-                if (position != null)
-                {
-                    // Run this on the UI thread since it might be called from a background thread
-                    MainThread.BeginInvokeOnMainThread(async () => {
-                        await Shell.Current.DisplayAlert(
-                            "Point Clicked",
-                            $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
-                            "OK");
+                // Run this on the UI thread since it might be called from a background thread
+                MainThread.BeginInvokeOnMainThread(async () => {
+                    await Shell.Current.DisplayAlert(
+                        "Point Clicked",
+                        $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
+                        "OK");
 
-                        // TODO
-                    });
-                }
+                    // TODO
+                });
 
                 e.Handled = true;
             }
