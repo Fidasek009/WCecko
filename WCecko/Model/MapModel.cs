@@ -12,6 +12,7 @@ namespace WCecko.Model
         public static IFeature CreatePoint(MPoint mPoint)
         {
             var feature = new PointFeature(mPoint);
+            feature["ID"] = $"{mPoint.X};{mPoint.Y}";
 
             var poopColor = new Brush(new Color(100, 69, 40));
 

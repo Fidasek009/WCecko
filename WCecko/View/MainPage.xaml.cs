@@ -1,8 +1,6 @@
-﻿using Mapsui.Extensions;
-using Mapsui.Layers;
+﻿using Mapsui.Layers;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
-using Mapsui.Widgets;
 using WCecko.ViewModel;
 
 namespace WCecko
@@ -29,9 +27,9 @@ namespace WCecko
 
             map.Layers.Add(OpenStreetMap.CreateTileLayer());
             map.Layers.Add(pointsLayer);
-            map.Widgets.Add(new MapInfoWidget(map));
 
             mapControl.LongTap += vm.OnMapLongTapped;
+            mapControl.Info += vm.OnMapFeatureInfo;
 
             return mapControl;
         }
