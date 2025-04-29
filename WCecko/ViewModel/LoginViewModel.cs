@@ -31,5 +31,11 @@ namespace WCecko.ViewModel
                 await Shell.Current.DisplayAlert("Error", "Invalid username or password", "OK");
             }
         }
+
+        [RelayCommand]
+        async Task Register()
+        {
+            await Shell.Current.GoToAsync(nameof(RegisterPage));
+        }
     }
 }

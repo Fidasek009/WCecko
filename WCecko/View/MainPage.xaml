@@ -24,12 +24,12 @@
             VerticalOptions="Center"
             Margin="12" />
 
-        <Label
-            Grid.Column="1"
-            Text="WCecko"
-            FontSize="32"
-            Margin="12"
-            HorizontalOptions="Center" />
+        <Image
+           Grid.Column="1"
+           Source="logo.png"
+           HeightRequest="64"
+           Aspect="AspectFit"
+           SemanticProperties.Description="logo" />
 
         <Button
             Grid.Column="2" 

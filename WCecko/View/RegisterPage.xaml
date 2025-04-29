@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
-            x:Class="WCecko.LoginPage"
+            x:Class="WCecko.RegisterPage"
             xmlns:vm="clr-namespace:WCecko.ViewModel"
-            x:DataType="vm:LoginViewModel">
+            x:DataType="vm:RegisterViewModel">
 
     <ScrollView>
         <VerticalStackLayout
            Padding="30,0"
            Spacing="25"
-           WidthRequest="500"
+           MinimumWidthRequest="500" 
            VerticalOptions="Center"
            HorizontalOptions="Center">
             <Image
@@ -19,7 +19,7 @@
                SemanticProperties.Description="logo" />
 
             <Label
-               Text="Log in!"
+               Text="Register!"
                Style="{StaticResource Headline}"
                SemanticProperties.HeadingLevel="Level1" />
 
@@ -34,15 +34,11 @@
                 IsPassword="True"
                 SemanticProperties.Hint="Enter your password" />
 
-            <Button
-               Text="Log in"
-               SemanticProperties.Hint="Click to log in"
-               Command="{Binding LoginCommand}"/>
-
-            <Label
-                Text="Don't have an account?"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"/>
+            <Entry
+                Text="{Binding ConfirmPassword}"
+                Placeholder="Repeat password"
+                IsPassword="True"
+                SemanticProperties.Hint="Repeat your password" />
 
             <Button
                 Text="Register"
