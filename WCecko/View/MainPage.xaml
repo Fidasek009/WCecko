@@ -5,8 +5,7 @@
              xmlns:vm="clr-namespace:WCecko.ViewModel"
              x:DataType="vm:MainViewModel">
 
-
-    <Grid>
+    <Grid Padding="20" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -21,8 +20,7 @@
             Text="{Binding Username}"
             FontSize="24"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
-            Margin="12" />
+            VerticalOptions="Center"/>
 
         <Image
            Grid.Column="1"
@@ -35,7 +33,6 @@
             Grid.Column="2" 
             Text="Log out"
             FontSize="16"
-            Margin="12"
             Command="{Binding LogoutCommand}"/>
 
         <Grid

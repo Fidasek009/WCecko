@@ -3,35 +3,34 @@ using Mapsui.Tiling;
 using Mapsui.UI.Maui;
 using WCecko.ViewModel;
 
-namespace WCecko
+namespace WCecko;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    public MainPage(MainViewModel vm)
     {
-        public MainPage(MainViewModel vm)
+        InitializeComponent();
+        BindingContext = vm;
+        MapContainer.Children.Add(CreateMap(vm));
+    }
+
+    private static MapControl CreateMap(MainViewModel vm)
+    {
+        var mapControl = new MapControl();
+        var map = mapControl.Map;
+        var pointsLayer = new MemoryLayer
         {
-            InitializeComponent();
-            BindingContext = vm;
-            MapContainer.Children.Add(CreateMap(vm));
-        }
+            Name = "user_points",
+            Style = null,
+            IsMapInfoLayer = true
+        };
 
-        private static MapControl CreateMap(MainViewModel vm)
-        {
-            var mapControl = new MapControl();
-            var map = mapControl.Map;
-            var pointsLayer = new MemoryLayer
-            {
-                Name = "user_points",
-                Style = null,
-                IsMapInfoLayer = true
-            };
+        map.Layers.Add(OpenStreetMap.CreateTileLayer());
+        map.Layers.Add(pointsLayer);
 
-            map.Layers.Add(OpenStreetMap.CreateTileLayer());
-            map.Layers.Add(pointsLayer);
+        mapControl.LongTap += vm.OnMapLongTapped;
+        mapControl.Info += vm.OnMapFeatureInfo;
 
-            mapControl.LongTap += vm.OnMapLongTapped;
-            mapControl.Info += vm.OnMapFeatureInfo;
-
-            return mapControl;
-        }
+        return mapControl;
     }
 }

@@ -1,13 +1,12 @@
 using WCecko.ViewModel;
 
-namespace WCecko
+namespace WCecko;
+
+public partial class LoginPage : ContentPage
 {
-    public partial class LoginPage : ContentPage
+    public LoginPage(LoginViewModel vm)
     {
-        public LoginPage(LoginViewModel vm)
-        {
-            InitializeComponent();
-            BindingContext = vm;
-        }
+        InitializeComponent();
+        BindingContext = vm;
     }
 }

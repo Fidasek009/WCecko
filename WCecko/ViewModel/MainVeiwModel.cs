@@ -11,92 +11,91 @@ using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 using WCecko.Model;
 
 
-namespace WCecko.ViewModel
+namespace WCecko.ViewModel;
+
+[QueryProperty("Username", "Username")]
+public partial class MainViewModel : ObservableObject
 {
-    [QueryProperty("Username", "Username")]
-    public partial class MainViewModel : ObservableObject
+    [ObservableProperty]
+    public partial string Username { get; set; } = "";
+
+    [RelayCommand]
+    async Task Logout()
     {
-        [ObservableProperty]
-        string _username = "";
+        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+    }
 
-        [RelayCommand]
-        async Task Logout()
+    public async void OnMapLongTapped(object? sender, TappedEventArgs e)
+    {
+        try
         {
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-        }
+            // Extract the screen position from the event arguments
+            var screenPosition = e.ScreenPosition;
 
-        public async void OnMapLongTapped(object? sender, TappedEventArgs e)
-        {
-            try
+            // Get the MapControl instance
+            var mapControl = sender as MapControl;
+            var map = mapControl?.Map;
+            var pointsLayer = map!.Layers.FindLayer("user_points").First() as MemoryLayer;
+
+            if (mapControl?.Map?.Navigator?.Viewport != null)
             {
-                // Extract the screen position from the event arguments
-                var screenPosition = e.ScreenPosition;
-
-                // Get the MapControl instance
-                var mapControl = sender as MapControl;
-                var map = mapControl?.Map;
-                var pointsLayer = map.Layers.FindLayer("user_points").First() as MemoryLayer;
-
-                if (mapControl?.Map?.Navigator?.Viewport != null)
-                {
-                    // Convert the screen position to map coordinates (MPoint)
-                    var mapPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
-                    var newPoint = MapModel.CreatePoint(mapPosition);
-                    var features = pointsLayer.Features?.ToList() ?? new List<IFeature>();
-                    
-                    features.Add(newPoint);
-                    pointsLayer.Features = features;
-                    pointsLayer.DataHasChanged();
-                    mapControl.Map.Refresh();
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlert("Error", "Unable to determine map position.", "OK");
-                }
+                // Convert the screen position to map coordinates (MPoint)
+                var mapPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
+                var newPoint = MapModel.CreatePoint(mapPosition);
+                var features = pointsLayer!.Features?.ToList() ?? new List<IFeature>();
+                
+                features.Add(newPoint);
+                pointsLayer.Features = features;
+                pointsLayer.DataHasChanged();
+                mapControl.Map.Refresh();
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"Error extracting tap location: {ex.Message}");
-            }
-            finally
-            {
-                e.Handled = true;
+                await Shell.Current.DisplayAlert("Error", "Unable to determine map position.", "OK");
             }
         }
-
-        public async void OnMapFeatureInfo(object? sender, MapInfoEventArgs e)
+        catch (Exception ex)
         {
-            if (e.MapInfo?.Feature == null) return;
+            Debug.WriteLine($"Error extracting tap location: {ex.Message}");
+        }
+        finally
+        {
+            e.Handled = true;
+        }
+    }
 
-            // Only handle clicks on the points layer
-            if (e.MapInfo.Layer.Name == "user_points")
-            {
-                var feature = e.MapInfo.Feature;
+    public async void OnMapFeatureInfo(object? sender, MapInfoEventArgs e)
+    {
+        if (e.MapInfo?.Feature == null) return;
 
-                var pointId = feature["ID"] as String;
-                if (pointId == null) {
-                    await Shell.Current.DisplayAlert("Error", "Point ID not found.", "OK");
-                    e.Handled = true;
-                    return;
-                }
+        // Only handle clicks on the points layer
+        if (e.MapInfo.Layer!.Name == "user_points")
+        {
+            var feature = e.MapInfo.Feature;
 
-                var XY = pointId.Split(';');
-                var x = double.Parse(XY[0]);
-                var y = double.Parse(XY[1]);
-                var position = new MPoint(x, y);
-
-                // Run this on the UI thread since it might be called from a background thread
-                MainThread.BeginInvokeOnMainThread(async () => {
-                    await Shell.Current.DisplayAlert(
-                        "Point Clicked",
-                        $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
-                        "OK");
-
-                    // TODO
-                });
-
+            var pointId = feature["ID"] as String;
+            if (pointId == null) {
+                await Shell.Current.DisplayAlert("Error", "Point ID not found.", "OK");
                 e.Handled = true;
+                return;
             }
+
+            var XY = pointId.Split(';');
+            var x = double.Parse(XY[0]);
+            var y = double.Parse(XY[1]);
+            var position = new MPoint(x, y);
+
+            // Run this on the UI thread since it might be called from a background thread
+            MainThread.BeginInvokeOnMainThread(async () => {
+                await Shell.Current.DisplayAlert(
+                    "Point Clicked",
+                    $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
+                    "OK");
+
+                // TODO
+            });
+
+            e.Handled = true;
         }
     }
 }
