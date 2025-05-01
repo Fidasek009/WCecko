@@ -28,7 +28,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<RegisterViewModel>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
-        // builder.Services.AddTransient<CreatePlacePopup>();
+        builder.Services.AddTransientPopup<CreatePlacePopup, CreatePlaceViewModel>();
+
 
 #if DEBUG
         builder.Logging.AddDebug();

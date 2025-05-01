@@ -11,12 +11,21 @@ using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 using WCecko.Model;
 using WCecko.View;
+using CommunityToolkit.Maui.Core;
+using System.Collections.Generic;
 
 namespace WCecko.ViewModel;
 
 [QueryProperty("Username", "Username")]
 public partial class MainViewModel : ObservableObject
 {
+    private readonly IPopupService popupService;
+
+    public MainViewModel(IPopupService popupService)
+    {
+        this.popupService = popupService;
+    }
+
     [ObservableProperty]
     public partial string Username { get; set; } = "";
 
@@ -30,34 +39,24 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            // Extract the screen position from the event arguments
-            var screenPosition = e.ScreenPosition;
-
-            // Get the MapControl instance
             var mapControl = sender as MapControl;
             var map = mapControl?.Map;
-            var pointsLayer = map!.Layers.FindLayer("user_points").First() as MemoryLayer;
 
-            if (mapControl?.Map?.Navigator?.Viewport != null)
-            {
-                // Convert the screen position to map coordinates (MPoint)
-                var mapPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
-                var newPoint = MapModel.CreatePoint(mapPosition);
-                var features = pointsLayer!.Features?.ToList() ?? new List<IFeature>();
-
-                features.Add(newPoint);
-                pointsLayer.Features = features;
-                pointsLayer.DataHasChanged();
-                mapControl.Map.Refresh();
-
-                // Corrected the usage of ShowPopupAsync to pass an instance of CreatePlacePopup
-                var popup = new CreatePlacePopup(new CreatePlaceViewModel());
-                await Shell.Current.CurrentPage.ShowPopupAsync(popup);
-            }
-            else
-            {
+            if (map!.Navigator?.Viewport == null) {
                 await Shell.Current.DisplayAlert("Error", "Unable to determine map position.", "OK");
+                return;
             }
+
+            // extract click location to map coordinates
+            var screenPosition = e.ScreenPosition;
+            var mapPosition = map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
+
+            var result = await popupService.ShowPopupAsync<CreatePlaceViewModel>();
+            if (result is not CreatePlaceViewModel resultViewModel) {
+                return;
+            }
+
+            MapModel.AddPointToMap(map, mapPosition);
         }
         catch (Exception ex)
         {

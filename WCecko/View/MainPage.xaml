@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WCecko.MainPage"
-             xmlns:vm="clr-namespace:WCecko.ViewModel"
-             x:DataType="vm:MainViewModel">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+            x:Class="WCecko.MainPage"  
+            xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
+            xmlns:vm="clr-namespace:WCecko.ViewModel"  
+            x:DataType="vm:MainViewModel">
 
-    <Grid Padding="20" RowSpacing="10">
+    <Grid Padding="10" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -16,28 +17,43 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Label
-            Text="{Binding Username}"
-            FontSize="24"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"/>
+        <Grid ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Image
-           Grid.Column="1"
-           Source="logo.png"
-           HeightRequest="64"
-           Aspect="AspectFit"
-           SemanticProperties.Description="logo" />
+            <toolkit:AvatarView
+                Text="{Binding Username[0]}"
+                TextColor="Black"
+                BorderColor="Black"
+                BackgroundColor="White"/>
 
-        <Button
-            Grid.Column="2" 
-            Text="Log out"
-            FontSize="16"
+            <Label
+                Grid.Column="1"
+                Text="{Binding Username}"
+                FontSize="24"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+        </Grid>
+
+        <Image  
+            Grid.Column="1"  
+            Source="logo.png"  
+            HeightRequest="64"  
+            Aspect="AspectFit"  
+            SemanticProperties.Description="logo" />
+
+        <Button  
+            Grid.Column="2"   
+            Text="Log out"  
+            FontSize="16"  
+            Margin="0,10"  
             Command="{Binding LogoutCommand}"/>
 
-        <Grid
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
+        <Grid  
+            Grid.Row="1"  
+            Grid.ColumnSpan="3"  
             x:Name="MapContainer" />
     </Grid>
 

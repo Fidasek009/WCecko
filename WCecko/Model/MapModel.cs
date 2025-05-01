@@ -4,6 +4,8 @@ using Mapsui;
 
 using Color = Mapsui.Styles.Color;
 using Brush = Mapsui.Styles.Brush;
+using Map = Mapsui.Map;
+using Mapsui.UI.Maui;
 
 namespace WCecko.Model;
 
@@ -26,5 +28,17 @@ class MapModel
         });
 
         return feature;
+    }
+
+    public static void AddPointToMap(Map map, MPoint mapPosition)
+    {
+        var pointsLayer = map.Layers.FindLayer("user_points").First() as MemoryLayer;
+        var newPoint = CreatePoint(mapPosition);
+        var features = pointsLayer!.Features?.ToList() ?? new List<IFeature>();
+
+        features.Add(newPoint);
+        pointsLayer.Features = features;
+        pointsLayer.DataHasChanged();
+        map.Refresh();
     }
 }
