@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    x:Class="WCecko.View.AddRatingPopup"
+    xmlns:vm="clr-namespace:WCecko.ViewModel"
+    x:DataType="vm:AddRatingViewModel"
+    Size="500, 280"
+    Color="Transparent">
+
+    <Frame CornerRadius="25" 
+           Margin="10"
+           BorderColor="Black"
+           BackgroundColor="{StaticResource Primary}"
+           HasShadow="True">
+        <ScrollView>
+            <VerticalStackLayout
+                Spacing="15">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"/>
+
+                    <Label
+                        Grid.Column="1"
+                        Text="Add rating"
+                        Style="{StaticResource Headline}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center" />
+
+                    <Button
+                        Grid.Column="2"
+                        Text="Save"
+                        Command="{Binding SaveCommand}" />
+                </Grid>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label
+                        Text="Rating (1-5 Stars):"
+                        FontAttributes="Bold" />
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Slider
+                            Maximum="5"
+                            Minimum="1"
+                            Value="{Binding Stars}"
+                            WidthRequest="200"/>
+                        <Label
+                            Text="{Binding Stars}"
+                            VerticalOptions="Center"
+                            FontSize="18"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <Editor
+                    Text="{Binding Comment}"
+                    Placeholder="Place Description"
+                    HeightRequest="100"
+                    AutoSize="TextChanges"
+                    SemanticProperties.Hint="Enter the description of the place" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Frame>
+</toolkit:Popup>

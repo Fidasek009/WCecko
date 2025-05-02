@@ -1,29 +1,24 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Diagnostics;
 using Mapsui;
-using Mapsui.Layers;
-using Mapsui.UI.Maui;
 using Mapsui.Extensions;
-using CommunityToolkit.Maui.Views;
-
-using TappedEventArgs = Mapsui.UI.TappedEventArgs;
-
+using Mapsui.UI.Maui;
+using System.Diagnostics;
 using WCecko.Model;
 using WCecko.View;
-using CommunityToolkit.Maui.Core;
-using System.Collections.Generic;
+using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 namespace WCecko.ViewModel;
 
 [QueryProperty("Username", "Username")]
 public partial class MainViewModel : ObservableObject
 {
-    private readonly IPopupService popupService;
+    private readonly IPopupService _popupService;
 
     public MainViewModel(IPopupService popupService)
     {
-        this.popupService = popupService;
+        _popupService = popupService;
     }
 
     [ObservableProperty]
@@ -42,7 +37,8 @@ public partial class MainViewModel : ObservableObject
             var mapControl = sender as MapControl;
             var map = mapControl?.Map;
 
-            if (map!.Navigator?.Viewport == null) {
+            if (map!.Navigator?.Viewport == null)
+            {
                 await Shell.Current.DisplayAlert("Error", "Unable to determine map position.", "OK");
                 return;
             }
@@ -51,10 +47,9 @@ public partial class MainViewModel : ObservableObject
             var screenPosition = e.ScreenPosition;
             var mapPosition = map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
 
-            var result = await popupService.ShowPopupAsync<CreatePlaceViewModel>();
-            if (result is not CreatePlaceViewModel resultViewModel) {
+            var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
+            if (result is not CreatePlaceViewModel resultViewModel)
                 return;
-            }
 
             MapModel.AddPointToMap(map, mapPosition);
         }
@@ -78,7 +73,8 @@ public partial class MainViewModel : ObservableObject
             var feature = e.MapInfo.Feature;
 
             var pointId = feature["ID"] as String;
-            if (pointId == null) {
+            if (pointId == null)
+            {
                 await Shell.Current.DisplayAlert("Error", "Point ID not found.", "OK");
                 e.Handled = true;
                 return;

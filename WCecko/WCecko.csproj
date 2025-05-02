@@ -79,6 +79,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\AddRatingPopup.xaml.cs">
+	    <DependentUpon>AddRatingPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\CreatePlacePopup.xaml.cs">
 	    <DependentUpon>CreatePlacePopup.xaml</DependentUpon>
 	  </Compile>
@@ -97,6 +100,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="View\AddRatingPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\CreatePlacePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

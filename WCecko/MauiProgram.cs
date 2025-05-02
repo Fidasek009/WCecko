@@ -1,8 +1,9 @@
-﻿using WCecko.ViewModel;
+﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
-using CommunityToolkit.Maui;
 using WCecko.View;
+using WCecko.ViewModel;
 
 namespace WCecko;
 
@@ -24,17 +25,19 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<LoginPage>();
         builder.Services.AddSingleton<LoginViewModel>();
-        
+
         builder.Services.AddSingleton<RegisterPage>();
         builder.Services.AddSingleton<RegisterViewModel>();
-        
+
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
-        
+
         builder.Services.AddTransientPopup<CreatePlacePopup, CreatePlaceViewModel>();
-        
+
         builder.Services.AddTransient<PlacePage>();
         builder.Services.AddTransient<PlaceViewModel>();
+
+        builder.Services.AddTransientPopup<AddRatingPopup, AddRatingViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

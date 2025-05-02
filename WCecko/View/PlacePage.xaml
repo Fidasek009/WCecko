@@ -75,13 +75,13 @@
                     IsVisible="{Binding PlaceImage, Converter={StaticResource IsNotNullConverter}}" />
 
                 <Label
-                    Text="Place Name"
+                    Text="{Binding Name}"
                     Style="{StaticResource Headline}"
                     VerticalOptions="Center"
                     HorizontalOptions="Center" />
 
                 <Label
-                    Text="Place Description... lorem ipsum dolor sit amet. aaaaaa aaaaaaaaaa aa aaaaa aaaaaaa aaaaaaa aaaaaa aaaa aaa aaaaaaa aaaaaa aaaaaa aaaa aaaaaaa aaaaa aaaaaaaaaaaaaaaa aaaaaaa aaaaaaaaaaa aa aaaa aaaaaaaaa a aaaaaaaa aaaaaaaaaaaaa aaaa aaaaa aaa aaaaaaaaaa aaaa aaaaaaa aaaaaaa" />
+                    Text="{Binding Description}" />
 
             </VerticalStackLayout>
         </ScrollView>

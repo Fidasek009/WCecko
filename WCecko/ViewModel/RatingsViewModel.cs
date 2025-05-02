@@ -1,13 +1,23 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using WCecko.Model;
+using WCecko.View;
 
 
 namespace WCecko.ViewModel;
 
 public partial class RatingsViewModel : ObservableObject
 {
+    private readonly IPopupService _popupService;
+
+    public RatingsViewModel(IPopupService popupService)
+    {
+        _popupService = popupService;
+    }
+
     [ObservableProperty]
     public partial double RatingMean { get; set; } = 4.8;
 
@@ -32,12 +42,22 @@ public partial class RatingsViewModel : ObservableObject
     [RelayCommand]
     async Task AddRating()
     {
-        Ratings.Add(new RatingModel
+        try
         {
-            UserName = "User" + (Ratings.Count + 1),
-            Comment = "Great app!",
-            Stars = 5,
-        });
-        // TODO
+            var result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
+            if (result is not AddRatingViewModel resultViewModel)
+                return;
+            
+            Ratings.Add(new RatingModel
+            {
+                UserName = "User" + (Ratings.Count + 1),
+                Comment = resultViewModel.Comment,
+                Stars = resultViewModel.Stars,
+            });
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error adding rating: {ex.Message}");
+        }
     }
 }
