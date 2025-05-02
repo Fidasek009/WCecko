@@ -95,4 +95,11 @@ public partial class CreatePlaceViewModel : ObservableObject
             return;
         }
     }
+
+    [RelayCommand]
+    async Task RemoveImage()
+    {
+        PlaceImage = null;
+        await Task.CompletedTask;
+    }
 }
