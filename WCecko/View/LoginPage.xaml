@@ -7,9 +7,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{OnPlatform Android=0.05*, iOS=0.1*, WinUI=0.35*}" />
-            <ColumnDefinition Width="{OnPlatform Android=0.9*, iOS=0.8*, WinUI=0.3*}" />
-            <ColumnDefinition Width="{OnPlatform Android=0.05*, iOS=0.1*, WinUI=0.35*}" />
+            <ColumnDefinition Width="{OnIdiom Phone=0.05*, Tablet=0.2*, Desktop=0.35*}" />
+            <ColumnDefinition Width="{OnIdiom Phone=0.9*, Tablet=0.6*, Desktop=0.3*}" />
+            <ColumnDefinition Width="{OnIdiom Phone=0.05*, Tablet=0.2*, Desktop=0.35*}" />
         </Grid.ColumnDefinitions>
 
         <ScrollView Grid.Column="1">

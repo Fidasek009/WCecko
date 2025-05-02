@@ -89,15 +89,7 @@ public partial class MainViewModel : ObservableObject
             var y = double.Parse(XY[1]);
             var position = new MPoint(x, y);
 
-            // Run this on the UI thread since it might be called from a background thread
-            MainThread.BeginInvokeOnMainThread(async () => {
-                await Shell.Current.DisplayAlert(
-                    "Point Clicked",
-                    $"Point ID: {pointId}\nLocation: X={position.X:F2}, Y={position.Y:F2}",
-                    "OK");
-
-                // TODO: show place info
-            });
+            await Shell.Current.GoToAsync(nameof(PlacePage));
 
             e.Handled = true;
         }

@@ -24,12 +24,17 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<LoginPage>();
         builder.Services.AddSingleton<LoginViewModel>();
+        
         builder.Services.AddSingleton<RegisterPage>();
         builder.Services.AddSingleton<RegisterViewModel>();
+        
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
+        
         builder.Services.AddTransientPopup<CreatePlacePopup, CreatePlaceViewModel>();
-
+        
+        builder.Services.AddTransient<PlacePage>();
+        builder.Services.AddTransient<PlaceViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

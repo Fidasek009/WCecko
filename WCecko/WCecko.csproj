@@ -82,6 +82,12 @@
 	  <Compile Update="View\CreatePlacePopup.xaml.cs">
 	    <DependentUpon>CreatePlacePopup.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\RatingsView.xaml.cs">
+	    <DependentUpon>RatingsView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\PlacePage.xaml.cs">
+	    <DependentUpon>PlacePage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\RegisterPage.xaml.cs">
 	    <DependentUpon>RegisterPage.xaml</DependentUpon>
 	  </Compile>
@@ -92,6 +98,12 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="View\CreatePlacePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\RatingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\PlacePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\RegisterPage.xaml">
