@@ -6,27 +6,26 @@ using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
 using WCecko.Model;
+using WCecko.Model.User;
 using WCecko.View;
 using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 namespace WCecko.ViewModel;
 
-[QueryProperty("Username", "Username")]
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel(IPopupService popupService, UserService userService) : ObservableObject
 {
-    private readonly IPopupService _popupService;
+    private readonly IPopupService _popupService = popupService;
+    private readonly UserService _userService = userService;
 
-    public MainViewModel(IPopupService popupService)
-    {
-        _popupService = popupService;
-    }
 
     [ObservableProperty]
-    public partial string Username { get; set; } = "";
+    public partial string Username { get; set; } = userService.CurrentUser?.Username ?? "Guest";
+
 
     [RelayCommand]
     async Task Logout()
     {
+        _userService.Logout();
         await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
     }
 

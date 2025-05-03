@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using SQLite;
+
+using WCecko.Model;
+using WCecko.Model.User;
 using WCecko.View;
 using WCecko.ViewModel;
 
@@ -23,6 +26,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        // UI services
         builder.Services.AddSingleton<LoginPage>();
         builder.Services.AddSingleton<LoginViewModel>();
 
@@ -38,6 +42,15 @@ public static class MauiProgram
         builder.Services.AddTransient<PlaceViewModel>();
 
         builder.Services.AddTransientPopup<AddRatingPopup, AddRatingViewModel>();
+
+        // DB services
+        builder.Services.AddSingleton<DatabaseService>();
+        builder.Services.AddSingleton<SQLiteAsyncConnection>(provider =>
+                provider.GetRequiredService<DatabaseService>().GetConnection());
+
+        builder.Services.AddSingleton<UserDatabaseService>();
+        builder.Services.AddSingleton<UserService>();
+
 
 #if DEBUG
         builder.Logging.AddDebug();

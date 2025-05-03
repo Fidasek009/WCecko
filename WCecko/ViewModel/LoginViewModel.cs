@@ -1,13 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Runtime.Versioning;
+
+using WCecko.Model.User;
 
 namespace WCecko.ViewModel;
 
-public partial class LoginViewModel : ObservableObject
+public partial class LoginViewModel(UserService userService) : ObservableObject
 {
-    private const string USERNAME = "admin";
-    private const string PASSWORD = "admin";
+    private readonly UserService _userService = userService;
+
 
     [ObservableProperty]
     public partial string Username { get; set; } = "";
@@ -15,22 +16,19 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     public partial string Password { get; set; } = "";
 
+
     [RelayCommand]
     async Task Login()
     {
-        if (Username == USERNAME && Password == PASSWORD)
-        {
-            await Shell.Current.GoToAsync($"//{nameof(MainPage)}",
-                new Dictionary<string, object>
-                {
-                    { "Username", Username }
-                }
-            );
-        }
-        else
+        var result = await _userService.AuthenticateUserAsync(Username, Password);
+
+        if (!result)
         {
             await Shell.Current.DisplayAlert("Error", "Invalid username or password", "OK");
+            return;
         }
+
+        await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
     }
 
     [RelayCommand]
