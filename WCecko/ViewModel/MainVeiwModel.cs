@@ -6,20 +6,32 @@ using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
 using WCecko.Model;
+using WCecko.Model.Map;
 using WCecko.Model.User;
 using WCecko.View;
 using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 namespace WCecko.ViewModel;
 
-public partial class MainViewModel(IPopupService popupService, UserService userService) : ObservableObject
+public partial class MainViewModel : ObservableObject
 {
-    private readonly IPopupService _popupService = popupService;
-    private readonly UserService _userService = userService;
+    private readonly IPopupService _popupService;
+    private readonly UserService _userService;
+    private readonly MapService _mapService;
+
+    public MainViewModel(IPopupService popupService, UserService userService, MapService mapService)
+    {
+        _popupService = popupService;
+        _userService = userService;
+        _mapService = mapService;
+
+        Username = _userService.CurrentUser?.Username ?? "Guest";
+        _userService.UserChanged += OnUserChanged;
+    }
 
 
     [ObservableProperty]
-    public partial string Username { get; set; } = userService.CurrentUser?.Username ?? "Guest";
+    public partial string Username { get; set; }
 
 
     [RelayCommand]
@@ -27,6 +39,11 @@ public partial class MainViewModel(IPopupService popupService, UserService userS
     {
         _userService.Logout();
         await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+    }
+
+    private void OnUserChanged(object? sender, User? e)
+    {
+        Username = e?.Username ?? "Guest";
     }
 
     public async void OnMapLongTapped(object? sender, TappedEventArgs e)
@@ -46,15 +63,21 @@ public partial class MainViewModel(IPopupService popupService, UserService userS
             var screenPosition = e.ScreenPosition;
             var mapPosition = map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
 
-            var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
-            if (result is not CreatePlaceViewModel resultViewModel)
+            var popupResult = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
+            if (popupResult is not CreatePlaceViewModel resultViewModel)
                 return;
 
-            MapModel.AddPointToMap(map, mapPosition);
+            var createResult = await _mapService.CreateMapPointAsync(mapPosition, resultViewModel.PlaceName, resultViewModel.PlaceDescription);
+            if (!createResult)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to create map point.", "OK");
+                return;
+            }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error extracting tap location: {ex.Message}");
+            Debug.WriteLine($"Error in OnMapLongTapped: {ex.Message}");
+            await Shell.Current.DisplayAlert("Error", "An unexpected error occurred while creating the map point.", "OK");
         }
         finally
         {
@@ -64,28 +87,36 @@ public partial class MainViewModel(IPopupService popupService, UserService userS
 
     public async void OnMapFeatureInfo(object? sender, MapInfoEventArgs e)
     {
-        if (e.MapInfo?.Feature == null) return;
-
-        // Only handle clicks on the points layer
-        if (e.MapInfo.Layer!.Name == "user_points")
+        try
         {
+            if (e.MapInfo?.Feature == null)
+                return;
+
+            // Only handle clicks on the points layer
+            if (e.MapInfo.Layer!.Name != MapService.POINTS_LAYER_NAME)
+                return;
+
             var feature = e.MapInfo.Feature;
 
-            var pointId = feature["ID"] as String;
-            if (pointId == null)
+            if (feature["ID"] is not int pointId)
             {
                 await Shell.Current.DisplayAlert("Error", "Point ID not found.", "OK");
-                e.Handled = true;
                 return;
             }
 
-            var XY = pointId.Split(';');
-            var x = double.Parse(XY[0]);
-            var y = double.Parse(XY[1]);
-            var position = new MPoint(x, y);
-
-            await Shell.Current.GoToAsync(nameof(PlacePage));
-
+            await Shell.Current.GoToAsync(nameof(PlacePage), new Dictionary<string, object> 
+                {
+                    { "PointId", pointId }
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error in OnMapFeatureInfo: {ex.Message}");
+            await Shell.Current.DisplayAlert("Error", "An unexpected error occurred while displaying point information.", "OK");
+        }
+        finally
+        {
             e.Handled = true;
         }
     }

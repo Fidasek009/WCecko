@@ -1,18 +1,21 @@
 ﻿using SQLite;
-using WCecko.Model.User;
 
 namespace WCecko.Model;
 
 public class DatabaseService
 {
+    const string DATABASE_FILE_NAME = "wcecko.db";
+
+    // Windows: C:\Users\<user>\AppData\Local\Packages\com.companyname.wcecko_9zz4h110yvjzm\LocalState\wcecko.db
+    static readonly string path = Path.Combine(FileSystem.AppDataDirectory, DATABASE_FILE_NAME);
+
     private readonly SQLiteAsyncConnection _db;
 
     public DatabaseService()
     {
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "wcecko.db");
-        _db = new SQLiteAsyncConnection(dbPath);
-
-        _db.CreateTablesAsync(CreateFlags.None, typeof(User.User)).Wait();
+        _db = new SQLiteAsyncConnection(path);
+        _db.CreateTableAsync<User.User>().Wait();
+        _db.CreateTableAsync<Map.MapPoint>().Wait();
     }
 
     public SQLiteAsyncConnection GetConnection()

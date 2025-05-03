@@ -2,19 +2,24 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using WCecko.Model.Map;
+using WCecko.Model.User;
+
 namespace WCecko.ViewModel;
 
-public partial class PlaceViewModel : ObservableObject
+[QueryProperty("PointId", "PointId")]
+public partial class PlaceViewModel(IPopupService popupService, MapService mapService, UserService userService) : ObservableObject
 {
-    private readonly IPopupService _popupService;
+    private readonly IPopupService _popupService = popupService;
+    private readonly MapService _mapService = mapService;
+    private readonly UserService _userService = userService;
 
-    public PlaceViewModel(IPopupService popupService)
-    {
-        _popupService = popupService;
-    }
 
     [ObservableProperty]
-    public partial bool ModifyPermission { get; set; } = true; // TODO: set to false later
+    public partial int PointId { get; set; }
+
+    [ObservableProperty]
+    public partial bool ModifyPermission { get; set; } = false;
 
     [ObservableProperty]
     public partial string Name { get; set; } = "";
@@ -24,6 +29,39 @@ public partial class PlaceViewModel : ObservableObject
 
     [ObservableProperty]
     public partial ImageSource? PlaceImage { get; set; }
+
+
+    async partial void OnPointIdChanged(int value)
+    {
+        //if (value == null)
+        //    return;
+
+        var point = await _mapService.GetMapPointAsync(value);
+        if (point == null)
+            return;
+
+        Name = point.Title;
+        Description = point.Description;
+        // TODO: PlaceImage = point.Image;
+        ModifyPermission = CheckModifyPermission(point.CreatedBy);
+    }
+
+
+    private bool CheckModifyPermission(string pointCreator)
+    {
+        var user = _userService.CurrentUser;
+        if (user == null)
+            return false;
+
+        if (user.HasPermission(UserPermission.ModifyAllPoints))
+            return true;
+
+        if (user.Username == pointCreator && user.HasPermission(UserPermission.ModifyOwnPoints))
+            return true;
+
+        return false;
+    }
+
 
     [RelayCommand]
     async Task EditPlace()

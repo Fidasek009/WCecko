@@ -5,6 +5,7 @@ using SQLite;
 
 using WCecko.Model;
 using WCecko.Model.User;
+using WCecko.Model.Map;
 using WCecko.View;
 using WCecko.ViewModel;
 
@@ -50,6 +51,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<UserDatabaseService>();
         builder.Services.AddSingleton<UserService>();
+
+        builder.Services.AddSingleton<MapDatabaseService>();
+        builder.Services.AddSingleton<MapService>();
 
 
 #if DEBUG
