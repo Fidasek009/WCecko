@@ -67,7 +67,7 @@ public partial class MainViewModel : ObservableObject
             if (popupResult is not CreatePlaceViewModel resultViewModel)
                 return;
 
-            var createResult = await _mapService.CreateMapPointAsync(mapPosition, resultViewModel.PlaceName, resultViewModel.PlaceDescription);
+            var createResult = await _mapService.CreateMapPointAsync(mapPosition, resultViewModel.PlaceName, resultViewModel.PlaceDescription, resultViewModel.PlaceImage);
             if (!createResult)
             {
                 await Shell.Current.DisplayAlert("Error", "Failed to create map point.", "OK");

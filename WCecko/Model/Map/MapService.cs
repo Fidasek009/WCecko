@@ -13,7 +13,9 @@ namespace WCecko.Model.Map;
 public class MapService
 {
     public const string POINTS_LAYER_NAME = "user_points";
-    
+    public const int IMAGE_MAX_HEIGHT = 256;
+    public const int IMAGE_MAX_WIDTH = 512;
+
     private readonly MapDatabaseService _mapDatabaseService;
     private readonly UserService _userService;
     
@@ -43,7 +45,7 @@ public class MapService
     }
 
 
-    public async Task<bool> CreateMapPointAsync(MPoint mPoint, string title, string description)
+    public async Task<bool> CreateMapPointAsync(MPoint mPoint, string title, string description, ImageSource? image)
     {
         var user = _userService.CurrentUser;
         if (user == null)
@@ -52,7 +54,7 @@ public class MapService
         if (!user.HasPermission(UserPermission.CreatePoints))
             return false;
 
-        var newPointId = await _mapDatabaseService.CreateMapPointAsync(mPoint, user.Username, title, description);
+        var newPointId = await _mapDatabaseService.CreateMapPointAsync(mPoint, user.Username, title, description, image);
         if (newPointId == null)
             return false;
 

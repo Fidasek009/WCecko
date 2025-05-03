@@ -2,18 +2,16 @@
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Mapsui;
+
+using WCecko.Model;
+using WCecko.Model.Map;
 
 namespace WCecko.ViewModel;
 
-public partial class CreatePlaceViewModel : ObservableObject
+public partial class CreatePlaceViewModel(IPopupService popupService) : ObservableObject
 {
-    readonly IPopupService popupService;
+    private readonly IPopupService popupService = popupService;
 
-    public CreatePlaceViewModel(IPopupService popupService)
-    {
-        this.popupService = popupService;
-    }
 
     [ObservableProperty]
     public partial string PlaceName { get; set; } = "";
@@ -37,36 +35,26 @@ public partial class CreatePlaceViewModel : ObservableObject
         await popupService.ClosePopupAsync(this);
     }
 
-    private byte[] ResizeImage(Stream inputStream, int width, int height)
-    {
-        using var originalBitmap = SkiaSharp.SKBitmap.Decode(inputStream);
-        using var resizedBitmap = originalBitmap.Resize(new SkiaSharp.SKImageInfo(width, height), SkiaSharp.SKFilterQuality.Medium);
-        using var image = SkiaSharp.SKImage.FromBitmap(resizedBitmap);
-        return image.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 80).ToArray(); // Compress to 80% quality
-    }
-
     [RelayCommand]
     async Task PickImage()
     {
-        try {
-            var result = await FilePicker.PickAsync(new PickOptions {
+        try
+        {
+            var image = await FilePicker.PickAsync(new PickOptions
+            {
                 PickerTitle = "Select an image",
                 FileTypes = FilePickerFileType.Images
             });
-
-            if (result == null) {
+            if (image == null)
                 return;
-            }
 
-            using var stream = await result.OpenReadAsync();
-            var memoryStream = new MemoryStream();
+            using var stream = await image.OpenReadAsync();
+            using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
-
-            memoryStream.Position = 0;
-            var resizedImage = ResizeImage(memoryStream, 200, 200); // Resize to 200x200 pixels
-            PlaceImage = ImageSource.FromStream(() => new MemoryStream(resizedImage));
+            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Console.WriteLine($"Error picking image: {ex.Message}");
             return;
         }
@@ -75,31 +63,27 @@ public partial class CreatePlaceViewModel : ObservableObject
     [RelayCommand]
     async Task CaptureImage()
     {
-        try {
+        try
+        {
             var photo = await MediaPicker.CapturePhotoAsync();
-
-            if (photo == null) {
+            if (photo == null)
                 return;
-            }
 
             using var stream = await photo.OpenReadAsync();
-            var memoryStream = new MemoryStream();
+            using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
-
-            memoryStream.Position = 0;
-            var resizedImage = ResizeImage(memoryStream, 200, 200); // Resize to 200x200 pixels
-            PlaceImage = ImageSource.FromStream(() => new MemoryStream(resizedImage));
+            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Console.WriteLine($"Error capturing image: {ex.Message}");
             return;
         }
     }
 
     [RelayCommand]
-    async Task RemoveImage()
+    void RemoveImage()
     {
         PlaceImage = null;
-        await Task.CompletedTask;
     }
 }

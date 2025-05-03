@@ -33,16 +33,13 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
 
     async partial void OnPointIdChanged(int value)
     {
-        //if (value == null)
-        //    return;
-
         var point = await _mapService.GetMapPointAsync(value);
         if (point == null)
             return;
 
         Name = point.Title;
         Description = point.Description;
-        // TODO: PlaceImage = point.Image;
+        PlaceImage = ImageSource.FromFile(point.ImagePath);
         ModifyPermission = CheckModifyPermission(point.CreatedBy);
     }
 
