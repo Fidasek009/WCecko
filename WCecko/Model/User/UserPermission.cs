@@ -8,10 +8,10 @@
 /// </remarks>
 public enum UserPermission
 {
-    CreatePoints,
-    ModifyOwnPoints,
-    ModifyAllPoints,
-    AddRatings,
+    CreatePlaces,
+    ModifyOwnPlaces,
+    ModifyAllPlaces,
+    CreateRatings,
     ModifyOwnRatings,
     ModifyAllRatings,
 }

@@ -41,41 +41,41 @@ public class MapService
         Map.Layers.Add(OpenStreetMap.CreateTileLayer());
         Map.Layers.Add(_pointsLayer);
 
-        Task.Run(AddAllPointsToMap);
+        Task.Run(AddAllPlacesToMap);
     }
 
 
-    public async Task<bool> CreateMapPointAsync(MPoint mPoint, string title, string description, ImageSource? image)
+    public async Task<bool> CreatePlaceAsync(MPoint mPoint, string title, string description, ImageSource? image)
     {
         var user = _userService.CurrentUser;
         if (user == null)
             return false;
 
-        if (!user.HasPermission(UserPermission.CreatePoints))
+        if (!user.HasPermission(UserPermission.CreatePlaces))
             return false;
 
-        var newPointId = await _mapDatabaseService.CreateMapPointAsync(mPoint, user.Username, title, description, image);
-        if (newPointId == null)
+        var newPlace = await _mapDatabaseService.CreatePlaceAsync(mPoint, user.Username, title, description, image);
+        if (newPlace == null)
             return false;
 
-        AddPointToMap(mPoint, newPointId.Value);
+        AddPointToMap(mPoint, newPlace.Id);
         return true;
     }
 
 
-    public async Task<MapPoint?> GetMapPointAsync(int id)
+    public async Task<Place?> GetPlaceAsync(int id)
     {
-        return await _mapDatabaseService.GetMapPointAsync(id);
+        return await _mapDatabaseService.GetPlaceAsync(id);
     }
 
-    public async Task AddAllPointsToMap()
+    public async Task AddAllPlacesToMap()
     {
-        var mapPoints = await _mapDatabaseService.GetAllMapPointsAsync();
+        var places = await _mapDatabaseService.GetAllPlacesAsync();
         var features = _pointsLayer.Features?.ToList() ?? [];
 
-        foreach (var point in mapPoints)
+        foreach (var place in places)
         {
-            var feature = CreatePoint(point.Location, point.Id);
+            var feature = CreatePoint(place.Location, place.Id);
             features.Add(feature);
         }
 

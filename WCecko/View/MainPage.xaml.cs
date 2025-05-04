@@ -1,7 +1,4 @@
-﻿using Mapsui.Layers;
-using Mapsui.Tiling;
-using Mapsui.UI.Maui;
-using WCecko.Model.Map;
+﻿using WCecko.Model.Map;
 using WCecko.ViewModel;
 
 namespace WCecko;

@@ -12,30 +12,22 @@ public class UserService(UserDatabaseService userDatabaseService)
         private set
         {
             _currentUser = value;
-            UserChanged?.Invoke(this, _currentUser);
+            UserChanged.Invoke(this, _currentUser);
         }
     }
 
     public async Task<bool> RegisterUserAsync(string username, string password)
     {
-        if (await _userDatabaseService.RegisterUserAsync(username, password))
-            return await AuthenticateUserAsync(username, password);
-        return false;
+       var user = await _userDatabaseService.RegisterUserAsync(username, password);
+        CurrentUser = user;
+        return user != null;
     }
 
     public async Task<bool> AuthenticateUserAsync(string username, string password)
     {
-        var result = await _userDatabaseService.AuthenticateUserAsync(username, password);
-        if (result)
-        {
-            CurrentUser = new User
-            {
-                Username = username,
-                PasswordHash = password,
-                Role = UserRole.User
-            };
-        }
-        return result;
+        var user = await _userDatabaseService.AuthenticateUserAsync(username, password);
+        CurrentUser = user;
+        return user != null;
     }
 
     public void Logout()

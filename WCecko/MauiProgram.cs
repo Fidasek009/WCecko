@@ -6,6 +6,7 @@ using SQLite;
 using WCecko.Model;
 using WCecko.Model.User;
 using WCecko.Model.Map;
+using WCecko.Model.Rating;
 using WCecko.View;
 using WCecko.ViewModel;
 
@@ -44,6 +45,7 @@ public static class MauiProgram
 
         builder.Services.AddTransientPopup<AddRatingPopup, AddRatingViewModel>();
 
+
         // DB services
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<SQLiteAsyncConnection>(provider =>
@@ -54,6 +56,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<MapDatabaseService>();
         builder.Services.AddSingleton<MapService>();
+
+        builder.Services.AddSingleton<RatingDatabaseService>();
+        builder.Services.AddSingleton<RatingService>();
 
 
 #if DEBUG

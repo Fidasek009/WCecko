@@ -7,17 +7,17 @@ public static class UserRoleExtensions
     {
         {
             UserRole.Admin, new[] {
-                UserPermission.CreatePoints,
-                UserPermission.ModifyAllPoints,
-                UserPermission.AddRatings,
+                UserPermission.CreatePlaces,
+                UserPermission.ModifyAllPlaces,
+                UserPermission.CreateRatings,
                 UserPermission.ModifyAllRatings
             }
         },
         {
             UserRole.User, new[] {
-                UserPermission.CreatePoints,
-                UserPermission.ModifyOwnPoints,
-                UserPermission.AddRatings,
+                UserPermission.CreatePlaces,
+                UserPermission.ModifyOwnPlaces,
+                UserPermission.CreateRatings,
                 UserPermission.ModifyOwnRatings
             }
         }

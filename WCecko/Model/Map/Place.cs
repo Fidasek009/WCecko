@@ -3,7 +3,7 @@ using SQLite;
 
 namespace WCecko.Model.Map;
 
-public class MapPoint
+public class Place
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }

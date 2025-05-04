@@ -7,9 +7,9 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 {
     private readonly SQLiteAsyncConnection _db = db;
 
-    public async Task<int?> CreateMapPointAsync(MPoint mPoint, string username, string title, string description, ImageSource? image)
+    public async Task<Place?> CreatePlaceAsync(MPoint mPoint, string username, string title, string description, ImageSource? image)
     {
-        var newPoint = new MapPoint
+        var newPlace = new Place
         {
             Location = mPoint,
             Title = title,
@@ -20,8 +20,8 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
         try
         {
-            await _db.InsertAsync(newPoint);
-            return newPoint.Id;
+            await _db.InsertAsync(newPlace);
+            return newPlace;
         }
         catch (SQLiteException ex)
         {
@@ -31,14 +31,14 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
         }
     }
 
-    public async Task<MapPoint?> GetMapPointAsync(int id)
+    public async Task<Place?> GetPlaceAsync(int id)
     {
-        return await _db.Table<MapPoint>().FirstOrDefaultAsync(x => x.Id == id);
+        return await _db.Table<Place>().FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IReadOnlyList<MapPoint>> GetAllMapPointsAsync()
+    public async Task<IReadOnlyList<Place>> GetAllPlacesAsync()
     {
-        var mapPoints = await _db.Table<MapPoint>().ToListAsync();
-        return mapPoints.AsReadOnly();
+        var places = await _db.Table<Place>().ToListAsync();
+        return places.AsReadOnly();
     }
 }

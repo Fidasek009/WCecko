@@ -3,20 +3,23 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using WCecko.Model.Map;
+using WCecko.Model.Rating;
 using WCecko.Model.User;
 
 namespace WCecko.ViewModel;
 
-[QueryProperty("PointId", "PointId")]
-public partial class PlaceViewModel(IPopupService popupService, MapService mapService, UserService userService) : ObservableObject
+[QueryProperty("PlaceId", "PlaceId")]
+public partial class PlaceViewModel(IPopupService popupService, MapService mapService, UserService userService, RatingService ratingService) : ObservableObject
 {
     private readonly IPopupService _popupService = popupService;
     private readonly MapService _mapService = mapService;
     private readonly UserService _userService = userService;
 
 
+    public RatingsViewModel RatingsViewModel { get; } = new RatingsViewModel(popupService, ratingService);
+
     [ObservableProperty]
-    public partial int PointId { get; set; }
+    public partial int PlaceId { get; set; }
 
     [ObservableProperty]
     public partial bool ModifyPermission { get; set; } = false;
@@ -31,16 +34,17 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     public partial ImageSource? PlaceImage { get; set; }
 
 
-    async partial void OnPointIdChanged(int value)
+    async partial void OnPlaceIdChanged(int value)
     {
-        var point = await _mapService.GetMapPointAsync(value);
-        if (point == null)
+        var place = await _mapService.GetPlaceAsync(value);
+        if (place == null)
             return;
 
-        Name = point.Title;
-        Description = point.Description;
-        PlaceImage = ImageSource.FromFile(point.ImagePath);
-        ModifyPermission = CheckModifyPermission(point.CreatedBy);
+        Name = place.Title;
+        Description = place.Description;
+        PlaceImage = ImageSource.FromFile(place.ImagePath);
+        ModifyPermission = CheckModifyPermission(place.CreatedBy);
+        this.RatingsViewModel.PlaceId = value;
     }
 
 
@@ -50,10 +54,10 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
         if (user == null)
             return false;
 
-        if (user.HasPermission(UserPermission.ModifyAllPoints))
+        if (user.HasPermission(UserPermission.ModifyAllPlaces))
             return true;
 
-        if (user.Username == pointCreator && user.HasPermission(UserPermission.ModifyOwnPoints))
+        if (user.Username == pointCreator && user.HasPermission(UserPermission.ModifyOwnPlaces))
             return true;
 
         return false;
@@ -67,6 +71,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
         if (result is not CreatePlaceViewModel resultViewModel)
             return;
 
+        // TODO: actually edit data in database
         Name = resultViewModel.PlaceName;
         Description = resultViewModel.PlaceDescription;
         PlaceImage = resultViewModel.PlaceImage;

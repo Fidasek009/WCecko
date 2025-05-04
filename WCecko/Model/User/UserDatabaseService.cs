@@ -7,36 +7,38 @@ public class UserDatabaseService(SQLiteAsyncConnection db)
 {
     private readonly SQLiteAsyncConnection _db = db;
 
-    public async Task<bool> RegisterUserAsync(string username, string password)
+    public async Task<User?> RegisterUserAsync(string username, string password)
     {
         var existingUser = await _db.Table<User>()
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
 
         if (existingUser != null)
-            return false;
+            return null;
 
-        var passwordHash = BCryptHelper.HashPassword(password);
         var newUser = new User
         {
             Username = username,
-            PasswordHash = passwordHash,
+            PasswordHash = BCryptHelper.HashPassword(password),
             Role = UserRole.User
         };
 
         await _db.InsertAsync(newUser);
-        return true;
+        return newUser;
     }
 
-    public async Task<bool> AuthenticateUserAsync(string username, string password)
+    public async Task<User?> AuthenticateUserAsync(string username, string password)
     {
         var user = await _db.Table<User>()
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
         
         if (user == null)
-            return false;
+            return null;
         
-        return BCryptHelper.Verify(password, user.PasswordHash);
+        if (!BCryptHelper.Verify(password, user.PasswordHash))
+            return null;
+
+        return user;
     }
 }

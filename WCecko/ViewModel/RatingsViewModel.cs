@@ -12,12 +12,18 @@ namespace WCecko.ViewModel;
 public partial class RatingsViewModel : ObservableObject
 {
     private readonly IPopupService _popupService;
+    private readonly RatingService _ratingService;
 
-    public RatingsViewModel(IPopupService popupService)
+    public RatingsViewModel(IPopupService popupService, RatingService ratingService)
     {
         _popupService = popupService;
-        Ratings.CollectionChanged += UpdateRatingStats;
+        _ratingService = ratingService;
+        Ratings.CollectionChanged += OnRatingsCollectionChanged;
+        Task.Run(LoadRatings);
     }
+
+    [ObservableProperty]
+    public partial int PlaceId { get; set; }
 
     [ObservableProperty]
     public partial double RatingMean { get; set; } = 4.8;
@@ -41,12 +47,22 @@ public partial class RatingsViewModel : ObservableObject
     public partial ObservableCollection<Rating> Ratings { get; set; } = [];
 
 
-    partial void OnRatingsChanged(ObservableCollection<Rating> value)
+    partial void OnPlaceIdChanged(int value)
     {
-        value.CollectionChanged += UpdateRatingStats;
+        Task.Run(LoadRatings);
     }
 
-    private void UpdateRatingStats(object? sendser, NotifyCollectionChangedEventArgs e)
+    partial void OnRatingsChanged(ObservableCollection<Rating> value)
+    {
+        value.CollectionChanged += OnRatingsCollectionChanged;
+    }
+
+    private void OnRatingsCollectionChanged(object? sendser, NotifyCollectionChangedEventArgs e)
+    {
+        UpdateRatingStats();
+    }
+
+    private void UpdateRatingStats()
     {
         if (Ratings.Count == 0)
             return;
@@ -70,6 +86,23 @@ public partial class RatingsViewModel : ObservableObject
     }
 
 
+    private async Task LoadRatings()
+    {
+        try
+        {
+            var ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
+            if (ratings == null)
+                return;
+            Ratings = [.. ratings];
+            UpdateRatingStats();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error loading ratings: {ex.Message}");
+        }
+    }
+
+
     [RelayCommand]
     async Task AddRating()
     {
@@ -79,12 +112,11 @@ public partial class RatingsViewModel : ObservableObject
             if (result is not AddRatingViewModel resultViewModel)
                 return;
             
-            Ratings.Add(new Rating
-            {
-                Username = "User" + (Ratings.Count + 1),
-                Comment = resultViewModel.Comment,
-                Stars = resultViewModel.Stars,
-            });
+            var rating = await _ratingService.CreateRatingAsync(PlaceId, resultViewModel.Stars, resultViewModel.Comment);
+            if (rating == null)
+                return;
+
+            Ratings.Add(rating);
         }
         catch (Exception ex)
         {

@@ -104,7 +104,7 @@
 
                             <HorizontalStackLayout Spacing="10">
                                 <toolkit:AvatarView
-                                    Text="{Binding Username[0]}"
+                                    Text="{Binding CreatedBy[0]}"
                                     HeightRequest="50"
                                     TextColor="Black"
                                     BorderColor="Black"
@@ -112,7 +112,7 @@
 
                                 <Label
                                     VerticalOptions="Center"
-                                    Text="{Binding Username}"
+                                    Text="{Binding CreatedBy}"
                                     TextColor="Black"
                                     FontSize="Medium" />
                             </HorizontalStackLayout>

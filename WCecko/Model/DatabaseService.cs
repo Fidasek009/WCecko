@@ -15,7 +15,8 @@ public class DatabaseService
     {
         _db = new SQLiteAsyncConnection(path);
         _db.CreateTableAsync<User.User>().Wait();
-        _db.CreateTableAsync<Map.MapPoint>().Wait();
+        _db.CreateTableAsync<Map.Place>().Wait();
+        _db.CreateTableAsync<Rating.Rating>().Wait();
     }
 
     public SQLiteAsyncConnection GetConnection()

@@ -88,7 +88,8 @@
 
         <local:RatingsView
             Grid.Column="{OnIdiom Desktop=1, Default=0}"
-            Grid.Row="{OnIdiom Desktop=0, Default=1}"/>
+            Grid.Row="{OnIdiom Desktop=0, Default=1}"
+            BindingContext="{Binding RatingsViewModel}" />
 
     </Grid>
 </ContentPage>
