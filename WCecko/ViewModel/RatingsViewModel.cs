@@ -137,12 +137,7 @@ public partial class RatingsViewModel : ObservableObject
     {
         try
         {
-            var confirm = await Shell.Current.DisplayAlert(
-                "Delete Rating",
-                "Are you sure you want to delete this rating?",
-                "Yes",
-                "No");
-
+            var confirm = await Shell.Current.DisplayAlert("Delete Rating", "Are you sure you want to delete this rating?", "Yes", "No");
             if (!confirm)
                 return;
 
@@ -164,6 +159,7 @@ public partial class RatingsViewModel : ObservableObject
     [RelayCommand]
     async Task EditRating(Rating rating)
     {
+        // TODO: find out how to pass rating data into the popup
         var editResult = await _popupService.ShowPopupAsync<AddRatingViewModel>();
         if (editResult is not AddRatingViewModel resultViewModel)
             return;

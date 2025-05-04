@@ -51,4 +51,10 @@ public class RatingDatabaseService(SQLiteAsyncConnection db)
         var ratings = await _db.Table<Rating>().Where(x => x.PlaceId == placeId).ToListAsync();
         return ratings.AsReadOnly();
     }
+
+    public async Task<bool> DeletePlaceRatingsAsync(int placeId)
+    {
+        var rows = await _db.ExecuteAsync($"DELETE FROM {nameof(Rating)} WHERE PlaceId = ?", placeId);
+        return rows >= 0;
+    }
 }

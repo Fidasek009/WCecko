@@ -71,7 +71,18 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
         if (result is not CreatePlaceViewModel resultViewModel)
             return;
 
-        // TODO: actually edit data in database
+        var editResult = await _mapService.UpdatePlaceAsync(
+            PlaceId,
+            resultViewModel.PlaceName,
+            resultViewModel.PlaceDescription,
+            resultViewModel.PlaceImage);
+
+        if (!editResult)
+        {
+            await Shell.Current.DisplayAlert("Error", "Failed to edit place.", "OK");
+            return;
+        }
+
         Name = resultViewModel.PlaceName;
         Description = resultViewModel.PlaceDescription;
         PlaceImage = resultViewModel.PlaceImage;
@@ -80,6 +91,17 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     [RelayCommand]
     async Task DeletePlace()
     {
-        // TODO
+        var confirm = await Shell.Current.DisplayAlert("Delete Place", "Are you sure you want to delete this place?", "Yes", "No");
+        if (!confirm)
+            return;
+
+        var result = await _mapService.DeletePlaceAsync(PlaceId);
+        if (!result)
+        {
+            await Shell.Current.DisplayAlert("Error", "Failed to delete place.", "OK");
+            return;
+        }
+
+        await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
     }
 }
