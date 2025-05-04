@@ -26,22 +26,22 @@ public partial class RatingsViewModel : ObservableObject
     public partial int PlaceId { get; set; }
 
     [ObservableProperty]
-    public partial double RatingMean { get; set; } = 4.8;
+    public partial double RatingMean { get; set; } = 0.0;
 
     [ObservableProperty]
-    public partial double FiveStarPct { get; set; } = 0.6;
+    public partial double FiveStarPct { get; set; } = 0.0;
 
     [ObservableProperty]
-    public partial double FourStarPct { get; set; } = 0.2;
+    public partial double FourStarPct { get; set; } = 0.0;
 
     [ObservableProperty]
-    public partial double ThreeStarPct { get; set; } = 0.07;
+    public partial double ThreeStarPct { get; set; } = 0.0;
 
     [ObservableProperty]
-    public partial double TwoStarPct { get; set; } = 0.03;
+    public partial double TwoStarPct { get; set; } = 0.0;
 
     [ObservableProperty]
-    public partial double OneStarPct { get; set; } = 0.1;
+    public partial double OneStarPct { get; set; } = 0.0;
 
     [ObservableProperty]
     public partial ObservableCollection<Rating> Ratings { get; set; } = [];
@@ -65,8 +65,16 @@ public partial class RatingsViewModel : ObservableObject
     private void UpdateRatingStats()
     {
         if (Ratings.Count == 0)
+        {
+            FiveStarPct = 0;
+            FourStarPct = 0;
+            ThreeStarPct = 0;
+            TwoStarPct = 0;
+            OneStarPct = 0;
+            RatingMean = 0;
             return;
-
+        }
+        
         int[] starCounts = new int[5];
         int totalStars = 0;
 
@@ -129,14 +137,21 @@ public partial class RatingsViewModel : ObservableObject
     {
         try
         {
-            var result = await Shell.Current.DisplayAlert(
+            var confirm = await Shell.Current.DisplayAlert(
                 "Delete Rating",
                 "Are you sure you want to delete this rating?",
                 "Yes",
                 "No");
 
-            if (!result)
+            if (!confirm)
                 return;
+
+            var deleteResult = await _ratingService.DeleteRatingAsync(rating);
+            if (!deleteResult)
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to delete rating.", "OK");
+                return;
+            }
 
             Ratings.Remove(rating);
         }
@@ -149,6 +164,26 @@ public partial class RatingsViewModel : ObservableObject
     [RelayCommand]
     async Task EditRating(Rating rating)
     {
-        // TODO
+        var editResult = await _popupService.ShowPopupAsync<AddRatingViewModel>();
+        if (editResult is not AddRatingViewModel resultViewModel)
+            return;
+
+        var prevStars = rating.Stars;
+        var prevComment = rating.Comment;
+
+        rating.Stars = resultViewModel.Stars;
+        rating.Comment = resultViewModel.Comment;
+
+        var updateResult = await _ratingService.UpdateRatingAsync(rating);
+        if (!updateResult)
+        {
+            rating.Stars = prevStars;
+            rating.Comment = prevComment;
+            await Shell.Current.DisplayAlert("Error", "Failed to update rating.", "OK");
+            return;
+        }
+
+        if (prevStars != rating.Stars)
+            UpdateRatingStats();
     }
 }

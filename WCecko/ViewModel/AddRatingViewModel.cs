@@ -2,10 +2,11 @@
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Mapsui;
 
 namespace WCecko.ViewModel;
 
+[QueryProperty("Stars", "Stars")]
+[QueryProperty("Comment", "Comment")]
 public partial class AddRatingViewModel(IPopupService popupService) : ObservableObject
 {
     private readonly IPopupService _popupService = popupService;

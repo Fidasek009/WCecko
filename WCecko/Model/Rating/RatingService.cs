@@ -53,7 +53,15 @@ public class RatingService(RatingDatabaseService ratingDatabaseService, UserServ
 
         return await _ratingDatabaseService.DeleteRatingAsync(rating.Id);
     }
-    
+
+    public async Task<bool> UpdateRatingAsync(Rating rating)
+    {
+        if (!CheckModifyPermissions(rating.CreatedBy))
+            return false;
+
+        return await _ratingDatabaseService.UpdateRatingAsync(rating);
+    }
+
     public async Task<IReadOnlyList<Rating>> GetPlaceRatingsAsync(int placeId)
     {
         var ratings = await _ratingDatabaseService.GetPlaceRatingsAsync(placeId);
