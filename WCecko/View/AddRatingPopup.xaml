@@ -3,10 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
     x:Class="WCecko.View.AddRatingPopup"
     xmlns:vm="clr-namespace:WCecko.ViewModel"
     x:DataType="vm:AddRatingViewModel"
-    Size="500, 280"
+    Size="500, 300"
     Color="Transparent">
 
     <Frame CornerRadius="25" 
@@ -59,12 +60,16 @@
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
 
+                <controls:RatingView
+                    Value="{Binding Stars}"
+                    StrokeColor="Black" />
+
                 <Editor
                     Text="{Binding Comment}"
-                    Placeholder="Place Description"
-                    HeightRequest="100"
+                    Placeholder="Comment"
+                    HeightRequest="80"
                     AutoSize="TextChanges"
-                    SemanticProperties.Hint="Enter the description of the place" />
+                    SemanticProperties.Hint="Enter your comment about this place" />
 
             </VerticalStackLayout>
         </ScrollView>

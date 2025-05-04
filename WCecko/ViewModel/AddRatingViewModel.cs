@@ -6,14 +6,9 @@ using Mapsui;
 
 namespace WCecko.ViewModel;
 
-public partial class AddRatingViewModel : ObservableObject
+public partial class AddRatingViewModel(IPopupService popupService) : ObservableObject
 {
-    private readonly IPopupService _popupService;
-
-    public AddRatingViewModel(IPopupService popupService)
-    {
-        _popupService = popupService;
-    }
+    private readonly IPopupService _popupService = popupService;
 
     [ObservableProperty]
     public partial int Stars { get; set; } = 3;

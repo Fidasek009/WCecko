@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:WCecko.ViewModel"
-             xmlns:model="clr-namespace:WCecko.Model"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
+             xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
+             xmlns:model="clr-namespace:WCecko.Model.Rating"
              x:DataType="vm:RatingsViewModel"
              x:Class="WCecko.View.RatingsView">
-
-    
 
     <Grid
         Padding="20"
@@ -27,97 +27,129 @@
             Style="{StaticResource SubHeadline}"
             HorizontalOptions="Center" />
 
-            <Label
-                Grid.Row="2"
-                Text="{Binding RatingMean}"
-                FontSize="64"
-                HorizontalOptions="Center" />
+        <Label
+            Grid.Row="2"
+            Text="{Binding RatingMean}"
+            FontSize="64"
+            HorizontalOptions="Center" />
 
-            <Button
-                Grid.Row="3"
-                Text="Add Rating"
-                Command="{Binding AddRatingCommand}"
-                HorizontalOptions="Center" />
+        <Button
+            Grid.Row="3"
+            Text="Add Rating"
+            Command="{Binding AddRatingCommand}"
+            HorizontalOptions="Center" />
 
-            <Grid
-                Grid.Column="2"
+        <Grid
+            Grid.Column="2"
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            ColumnSpacing="20"
+            Margin="20,0,0,0"
+            RowDefinitions="0.2*,0.2*,0.2*,0.2*,0.2*"
+            ColumnDefinitions="Auto,*">
+
+            <Label Text="5" />
+            <ProgressBar
+                Grid.Column="1"
+                ProgressColor="Yellow"
+                Progress="{Binding FiveStarPct}" />
+
+            <Label Grid.Row="1" Text="4" />
+            <ProgressBar
                 Grid.Row="1"
-                Grid.RowSpan="3"
-                ColumnSpacing="20"
-                Margin="20,0,0,0"
-                RowDefinitions="0.2*,0.2*,0.2*,0.2*,0.2*"
-                ColumnDefinitions="Auto,*">
+                Grid.Column="1"
+                ProgressColor="Yellow"
+                Progress="{Binding FourStarPct}" />
 
-                <Label Text="5" />
-                <ProgressBar
-                    Grid.Column="1"
-                    ProgressColor="Yellow"
-                    Progress="{Binding FiveStarPct}" />
+            <Label Grid.Row="2" Text="3" />
+            <ProgressBar
+                Grid.Row="2"
+                Grid.Column="1"
+                ProgressColor="Yellow"
+                Progress="{Binding ThreeStarPct}" />
 
-                <Label Grid.Row="1" Text="4" />
-                <ProgressBar
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    ProgressColor="Yellow"
-                    Progress="{Binding FourStarPct}" />
+            <Label Grid.Row="3" Text="2" />
+            <ProgressBar
+                Grid.Row="3"
+                Grid.Column="1"
+                ProgressColor="Yellow"
+                Progress="{Binding TwoStarPct}" />
 
-                <Label Grid.Row="2" Text="3" />
-                <ProgressBar
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    ProgressColor="Yellow"
-                    Progress="{Binding ThreeStarPct}" />
-
-                <Label Grid.Row="3" Text="2" />
-                <ProgressBar
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    ProgressColor="Yellow"
-                    Progress="{Binding TwoStarPct}" />
-
-                <Label Grid.Row="4" Text="1" />
-                <ProgressBar
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    ProgressColor="Yellow"
-                    Progress="{Binding OneStarPct}" />
-            </Grid>
-
-            <CollectionView
+            <Label Grid.Row="4" Text="1" />
+            <ProgressBar
                 Grid.Row="4"
-                Grid.ColumnSpan="2"
-                ItemsSource="{Binding Ratings}">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type model:RatingModel}">
-                        <Frame
-                            Padding="10"
-                            BorderColor="Black"
-                            BackgroundColor="White"
-                            CornerRadius="10">
-
-                            <StackLayout>
-                                <Label
-                                    Text="{Binding UserName}"
-                                    TextColor="Black"
-                                    FontSize="Medium" />
-                                <Label
-                                    Text="{Binding Comment}"
-                                    TextColor="Black"
-                                    FontSize="Small" />
-                                <Label
-                                    Text="{Binding Stars}"
-                                    TextColor="Black"
-                                    FontSize="Small" />
-                            </StackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
+                Grid.Column="1"
+                ProgressColor="Yellow"
+                Progress="{Binding OneStarPct}" />
         </Grid>
 
+        <CollectionView
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            ItemsSource="{Binding Ratings}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:Rating}">
+                    <Frame
+                        Padding="10"
+                        BorderColor="Black"
+                        BackgroundColor="White"
+                        CornerRadius="10">
+                        <Grid
+                            RowDefinitions="Auto,Auto"
+                            ColumnDefinitions="Auto,*">
+
+                            <HorizontalStackLayout Spacing="10">
+                                <toolkit:AvatarView
+                                    Text="{Binding Username[0]}"
+                                    HeightRequest="50"
+                                    TextColor="Black"
+                                    BorderColor="Black"
+                                    BackgroundColor="White"/>
+
+                                <Label
+                                    VerticalOptions="Center"
+                                    Text="{Binding Username}"
+                                    TextColor="Black"
+                                    FontSize="Medium" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout
+                                Grid.Column="1"
+                                HorizontalOptions="End"
+                                Spacing="10">
+                                <controls:RatingView
+                                    Value="{Binding Stars}"
+                                    StrokeColor="Black" />
+
+                                <Button
+                                    Text="Edit"
+                                    IsVisible="{Binding ModifyPermission}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RatingsViewModel}}, Path=EditRatingCommand}"
+                                    CommandParameter="{Binding .}"/>
+
+                                <Button
+                                    Text="Delete"
+                                    IsVisible="{Binding ModifyPermission}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RatingsViewModel}}, Path=DeleteRatingCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </HorizontalStackLayout>
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Padding="10"
+                                Text="{Binding Comment}"
+                                TextColor="Black"
+                                FontSize="Small" />
+
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentView>
