@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using WCecko.Model.Map;
 using WCecko.Model.Rating;
 using WCecko.Model.User;
+using WCecko.View;
 
 namespace WCecko.ViewModel;
 
@@ -67,7 +69,15 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     [RelayCommand]
     async Task EditPlace()
     {
-        var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
+        var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>(
+            onPresenting: vm =>
+            {
+                vm.PlaceName = Name;
+                vm.PlaceDescription = Description;
+                vm.PlaceImage = PlaceImage;
+            });
+
+        // var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
         if (result is not CreatePlaceViewModel resultViewModel)
             return;
 

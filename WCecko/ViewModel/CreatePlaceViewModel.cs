@@ -10,7 +10,7 @@ namespace WCecko.ViewModel;
 
 public partial class CreatePlaceViewModel(IPopupService popupService) : ObservableObject
 {
-    private readonly IPopupService popupService = popupService;
+    private readonly IPopupService _popupService = popupService;
 
 
     [ObservableProperty]
@@ -26,13 +26,13 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     [RelayCommand]
     async Task Cancel()
     {
-        await popupService.ClosePopupAsync(null);
+        await _popupService.ClosePopupAsync(null);
     }
 
     [RelayCommand]
     async Task Save()
     {
-        await popupService.ClosePopupAsync(this);
+        await _popupService.ClosePopupAsync(this);
     }
 
     [RelayCommand]

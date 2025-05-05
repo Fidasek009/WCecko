@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 
 using WCecko.Model.Rating;
 
@@ -95,72 +94,55 @@ public partial class RatingsViewModel : ObservableObject
 
 
     private async Task LoadRatings()
-    {
-        try
-        {
-            var ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
-            if (ratings == null)
-                return;
-            Ratings = [.. ratings];
-            UpdateRatingStats();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error loading ratings: {ex.Message}");
-        }
+    {        
+        var ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
+        if (ratings == null)
+            return;
+        Ratings = [.. ratings];
+        UpdateRatingStats();
     }
 
 
     [RelayCommand]
     async Task AddRating()
     {
-        try
-        {
-            var result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
-            if (result is not AddRatingViewModel resultViewModel)
-                return;
+        var result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
+        if (result is not AddRatingViewModel resultViewModel)
+            return;
             
-            var rating = await _ratingService.CreateRatingAsync(PlaceId, resultViewModel.Stars, resultViewModel.Comment);
-            if (rating == null)
-                return;
+        var rating = await _ratingService.CreateRatingAsync(PlaceId, resultViewModel.Stars, resultViewModel.Comment);
+        if (rating == null)
+            return;
 
-            Ratings.Add(rating);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error adding rating: {ex.Message}");
-        }
+        Ratings.Add(rating);
     }
 
     [RelayCommand]
     async Task DeleteRating(Rating rating)
     {
-        try
-        {
-            var confirm = await Shell.Current.DisplayAlert("Delete Rating", "Are you sure you want to delete this rating?", "Yes", "No");
-            if (!confirm)
-                return;
+        var confirm = await Shell.Current.DisplayAlert("Delete Rating", "Are you sure you want to delete this rating?", "Yes", "No");
+        if (!confirm)
+            return;
 
-            var deleteResult = await _ratingService.DeleteRatingAsync(rating);
-            if (!deleteResult)
-            {
-                await Shell.Current.DisplayAlert("Error", "Failed to delete rating.", "OK");
-                return;
-            }
-
-            Ratings.Remove(rating);
-        }
-        catch (Exception ex)
+        var deleteResult = await _ratingService.DeleteRatingAsync(rating);
+        if (!deleteResult)
         {
-            Debug.WriteLine($"Error deleting rating: {ex.Message}");
+            await Shell.Current.DisplayAlert("Error", "Failed to delete rating.", "OK");
+            return;
         }
+
+        Ratings.Remove(rating);
     }
 
     [RelayCommand]
     async Task EditRating(Rating rating)
     {
-        // TODO: find out how to pass rating data into the popup
-        var editResult = await _popupService.ShowPopupAsync<AddRatingViewModel>();
+        var editResult = await _popupService.ShowPopupAsync<AddRatingViewModel>(
+            onPresenting: vm =>
+            {
+                vm.Stars = rating.Stars;
+                vm.Comment = rating.Comment;
+            });
         if (editResult is not AddRatingViewModel resultViewModel)
             return;
 
