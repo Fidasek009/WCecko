@@ -140,6 +140,7 @@ public partial class RatingsViewModel : ObservableObject
         var editResult = await _popupService.ShowPopupAsync<AddRatingViewModel>(
             onPresenting: vm =>
             {
+                vm.Title = "Edit rating";
                 vm.Stars = rating.Stars;
                 vm.Comment = rating.Comment;
             });

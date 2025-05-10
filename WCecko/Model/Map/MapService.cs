@@ -44,6 +44,9 @@ public class MapService
         Map.Layers.Add(OpenStreetMap.CreateTileLayer());
         Map.Layers.Add(_pointsLayer);
 
+        // disable map rotation (mainly useful for mobile)
+        Map.Navigator.RotationLock = true;
+
         Task.Run(AddAllPlacesToMap);
     }
 

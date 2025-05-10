@@ -44,8 +44,13 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
 
         Name = place.Title;
         Description = place.Description;
-        PlaceImage = ImageSource.FromFile(place.ImagePath);
         ModifyPermission = CheckModifyPermission(place.CreatedBy);
+        
+        if (place.ImagePath == null || !File.Exists(place.ImagePath))
+            PlaceImage = null;
+        else
+            PlaceImage = ImageSource.FromFile(place.ImagePath);
+
         this.RatingsViewModel.PlaceId = value;
     }
 
@@ -72,6 +77,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
         var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>(
             onPresenting: vm =>
             {
+                vm.Title = "Edit place";
                 vm.PlaceName = Name;
                 vm.PlaceDescription = Description;
                 vm.PlaceImage = PlaceImage;

@@ -9,7 +9,6 @@
              x:Class="WCecko.View.RatingsView">
 
     <Grid
-        Padding="20"
         RowSpacing="20"
         RowDefinitions="Auto,Auto,Auto,Auto,*"
         ColumnDefinitions="Auto,*">
@@ -102,10 +101,11 @@
                             RowDefinitions="Auto,Auto"
                             ColumnDefinitions="Auto,*">
 
-                            <HorizontalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="{OnIdiom Phone=5, Default=10}">
                                 <toolkit:AvatarView
                                     Text="{Binding CreatedBy[0]}"
-                                    HeightRequest="50"
+                                    WidthRequest="{OnIdiom Phone=36, Default=50}"
+                                    HeightRequest="{OnIdiom Phone=36, Default=50}"
                                     TextColor="Black"
                                     BorderColor="Black"
                                     BackgroundColor="White"/>
@@ -114,25 +114,32 @@
                                     VerticalOptions="Center"
                                     Text="{Binding CreatedBy}"
                                     TextColor="Black"
-                                    FontSize="Medium" />
+                                    FontSize="{OnIdiom Phone=14, Default=20}" />
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout
                                 Grid.Column="1"
                                 HorizontalOptions="End"
-                                Spacing="10">
+                                Spacing="{OnIdiom Phone=5, Default=10}">
                                 <controls:RatingView
                                     Value="{Binding Stars}"
+                                    ItemSize="{OnIdiom Phone=12, Default=20}"
                                     StrokeColor="Black" />
 
                                 <Button
                                     Text="Edit"
+                                    Padding="{OnIdiom Phone=5, Default=10}"
+                                    FontSize="{OnIdiom Phone=12, Default=16}"
+                                    HeightRequest="{OnIdiom Phone=36, Default=44}"
                                     IsVisible="{Binding ModifyPermission}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RatingsViewModel}}, Path=EditRatingCommand}"
                                     CommandParameter="{Binding .}"/>
 
                                 <Button
                                     Text="Delete"
+                                    Padding="{OnIdiom Phone=5, Default=10}"
+                                    FontSize="{OnIdiom Phone=12, Default=16}"
+                                    HeightRequest="{OnIdiom Phone=36, Default=44}"
                                     IsVisible="{Binding ModifyPermission}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RatingsViewModel}}, Path=DeleteRatingCommand}"
                                     CommandParameter="{Binding .}"/>

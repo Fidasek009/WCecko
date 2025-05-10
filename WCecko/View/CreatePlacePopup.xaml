@@ -32,8 +32,8 @@
 
                     <Label
                         Grid.Column="1"
-                        Text="Create new place"
-                        Style="{StaticResource Headline}"
+                        Text="{Binding Title}"
+                        Style="{OnIdiom Phone={StaticResource SubHeadline}, Default={StaticResource Headline}}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center" />
 
@@ -57,17 +57,23 @@
                     AutoSize="TextChanges"
                     SemanticProperties.Hint="Enter the description of the place" />
             
-                <HorizontalStackLayout Spacing="10">
+                <HorizontalStackLayout Spacing="{OnIdiom Phone=5, Default=10}">
+                    <Label
+                        Text="Image:"
+                        VerticalOptions="Center"
+                        Style="{StaticResource SubHeadline}"/>
                     <Button
-                        Text="Pick Image"
+                        Text="Pick"
+                        FontSize="{OnIdiom Phone=14, Default=16}"
                         Command="{Binding PickImageCommand}" />
                     <Button
-                        Text="Capture Image"
+                        Text="Capture"
+                        FontSize="{OnIdiom Phone=14, Default=16}"
                         Command="{Binding CaptureImageCommand}"
                         IsVisible="{OnPlatform WinUI=False, Android=True, iOS=True}"/>
                     <Image
                         Source="{Binding PlaceImage}"
-                        HeightRequest="44"
+                        HeightRequest="40"
                         Aspect="AspectFill"
                         IsVisible="{Binding PlaceImage, Converter={StaticResource IsNotNullConverter}}"/>
                     <Button

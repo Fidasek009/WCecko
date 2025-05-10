@@ -12,6 +12,9 @@ public partial class AddRatingViewModel(IPopupService popupService) : Observable
     private readonly IPopupService _popupService = popupService;
 
     [ObservableProperty]
+    public partial string Title { get; set; } = "Add rating";
+
+    [ObservableProperty]
     public partial int Stars { get; set; } = 3;
 
     [ObservableProperty]

@@ -32,8 +32,8 @@
 
                     <Label
                         Grid.Column="1"
-                        Text="Add rating"
-                        Style="{StaticResource Headline}"
+                        Text="{Binding Title}"
+                        Style="{OnIdiom Phone={StaticResource SubHeadline}, Default={StaticResource Headline}}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center" />
 

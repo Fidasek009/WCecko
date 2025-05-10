@@ -6,90 +6,91 @@
              x:DataType="vm:PlaceViewModel"
              x:Class="WCecko.View.PlacePage">
 
-    <!-- Grid that has 2 columns on Desktop and 2 rows on Mobile/Tablet -->
-    <ContentPage.Resources>
-        <OnIdiom x:Key="GridRowDefinitionsIdiom" x:TypeArguments="RowDefinitionCollection">
-            <OnIdiom.Phone>
-                <RowDefinitionCollection>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </RowDefinitionCollection>
-            </OnIdiom.Phone>
-            <OnIdiom.Tablet>
-                <RowDefinitionCollection>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </RowDefinitionCollection>
-            </OnIdiom.Tablet>
-            <OnIdiom.Desktop>
-                <RowDefinitionCollection>
-                    <RowDefinition Height="*" />
-                </RowDefinitionCollection>
-            </OnIdiom.Desktop>
-        </OnIdiom>
-        
-        <OnIdiom x:Key="GridColumnDefinitionsIdiom" x:TypeArguments="ColumnDefinitionCollection">
-            <OnIdiom.Phone>
-                <ColumnDefinitionCollection>
-                    <ColumnDefinition Width="*" />
-                </ColumnDefinitionCollection>
-            </OnIdiom.Phone>
-            <OnIdiom.Tablet>
-                <ColumnDefinitionCollection>
-                    <ColumnDefinition Width="*" />
-                </ColumnDefinitionCollection>
-            </OnIdiom.Tablet>
-            <OnIdiom.Desktop>
-                <ColumnDefinitionCollection>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
-                </ColumnDefinitionCollection>
-            </OnIdiom.Desktop>
-        </OnIdiom>
-    </ContentPage.Resources>
-    
-    <Grid
-        Padding="20"
-        ColumnSpacing="{OnIdiom Desktop=20, Default=0}"
-        Grid.RowSpacing="{OnIdiom Desktop=0, Default=20}"
-        RowDefinitions="{StaticResource GridRowDefinitionsIdiom}"
-        ColumnDefinitions="{StaticResource GridColumnDefinitionsIdiom}">
-        <ScrollView Grid.Row="0" Grid.Column="0">
-            <VerticalStackLayout Spacing="15">
-                <HorizontalStackLayout
-                    Spacing="10"
-                    IsVisible="{Binding ModifyPermission}">
-                    <Button
-                        Text="Edit Place"
-                        Command="{Binding EditPlaceCommand}" />
-                    <Button
-                        Text="Delete Place"
-                        Command="{Binding DeletePlaceCommand}" />
-                </HorizontalStackLayout>
 
-                <Image
-                    Source="{Binding PlaceImage}"
-                    Aspect="AspectFit"
-                    HeightRequest="200"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding PlaceImage, Converter={StaticResource IsNotNullConverter}}" />
+    <!-- Conditional ScrollView for Mobile -->
+    <OnIdiom x:TypeArguments="View">
+        <OnIdiom.Phone>
+            <ScrollView>
+                <VerticalStackLayout
+                    Padding="10"
+                    Spacing="15">
+                    <HorizontalStackLayout
+                        Spacing="10"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding ModifyPermission}">
+                        <Button
+                            Text="Edit Place"
+                            Command="{Binding EditPlaceCommand}" />
+                        <Button
+                            Text="Delete Place"
+                            Command="{Binding DeletePlaceCommand}" />
+                    </HorizontalStackLayout>
 
-                <Label
-                    Text="{Binding Name}"
-                    Style="{StaticResource Headline}"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center" />
+                    <Image
+                        Source="{Binding PlaceImage}"
+                        Aspect="AspectFit"
+                        HeightRequest="200"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding PlaceImage, Converter={StaticResource IsNotNullConverter}}" />
 
-                <Label
-                    Text="{Binding Description}" />
+                    <Label
+                        Text="{Binding Name}"
+                        Style="{StaticResource Headline}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center" />
 
-            </VerticalStackLayout>
-        </ScrollView>
+                    <Label
+                        Text="{Binding Description}" />
 
-        <local:RatingsView
-            Grid.Column="{OnIdiom Desktop=1, Default=0}"
-            Grid.Row="{OnIdiom Desktop=0, Default=1}"
-            BindingContext="{Binding RatingsViewModel}" />
+                    <local:RatingsView
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        BindingContext="{Binding RatingsViewModel}" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </OnIdiom.Phone>
 
-    </Grid>
+        <!-- Desktop Layout -->
+        <OnIdiom.Desktop>
+            <Grid
+                Padding="20"
+                ColumnSpacing="20"
+                RowSpacing="0"
+                ColumnDefinitions="0.5*,0.5*">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout
+                        Spacing="10"
+                        IsVisible="{Binding ModifyPermission}">
+                        <Button
+                            Text="Edit Place"
+                            Command="{Binding EditPlaceCommand}" />
+                        <Button
+                            Text="Delete Place"
+                            Command="{Binding DeletePlaceCommand}" />
+                    </HorizontalStackLayout>
+
+                    <Image
+                        Source="{Binding PlaceImage}"
+                        Aspect="AspectFit"
+                        HeightRequest="200"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding PlaceImage, Converter={StaticResource IsNotNullConverter}}" />
+
+                    <Label
+                        Text="{Binding Name}"
+                        Style="{StaticResource Headline}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        Text="{Binding Description}" />
+                </VerticalStackLayout>
+
+                <local:RatingsView
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    BindingContext="{Binding RatingsViewModel}" />
+            </Grid>
+        </OnIdiom.Desktop>
+    </OnIdiom>
 </ContentPage>

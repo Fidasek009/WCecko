@@ -12,6 +12,8 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
 {
     private readonly IPopupService _popupService = popupService;
 
+    [ObservableProperty]
+    public partial string Title { get; set; } = "Create new place";
 
     [ObservableProperty]
     public partial string PlaceName { get; set; } = "";
