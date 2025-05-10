@@ -8,6 +8,7 @@ using WCecko.Model.User;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
 using WCecko.Model.Rating;
+using System.Diagnostics;
 
 namespace WCecko.Model.Map;
 
@@ -26,6 +27,7 @@ public class MapService
 
     private readonly MemoryLayer _pointsLayer;
 
+    private static readonly int _iconId = RegisterBitmapAsync("poop.png");
 
     public MapService(MapDatabaseService mapDatabaseService, UserService userService, RatingDatabaseService ratingDatabaseService)
     {
@@ -50,6 +52,27 @@ public class MapService
         Task.Run(AddAllPlacesToMap);
     }
 
+    private static int RegisterBitmapAsync(string imageName)
+    {
+        try
+        {
+            string resourceName = $"WCecko.Resources.Images.{imageName}";
+            var assembly = typeof(MapService).Assembly;
+
+            var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null) {
+                Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
+                return -1;
+            }
+
+            return BitmapRegistry.Instance.Register(stream);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error registering bitmap: {ex.Message}");
+            return -1;
+        }
+    }
 
     public async Task<bool> CreatePlaceAsync(MPoint mPoint, string title, string description, ImageSource? image)
     {
@@ -183,14 +206,27 @@ public class MapService
 
         var poopColor = new Brush(new Color(100, 69, 40));
 
-        feature.Styles.Add(new SymbolStyle
+
+        if (_iconId != -1)
         {
-            SymbolType = SymbolType.Triangle,
-            SymbolRotation = 180,
-            SymbolScale = 1,
-            Fill = poopColor,
-            SymbolOffset = new Offset(0, 16)
-        });
+            feature.Styles.Add(new SymbolStyle
+            {
+                BitmapId = _iconId,
+                SymbolScale = 0.25,
+                SymbolOffset = new Offset(0, 64),
+            });
+        }
+        else
+        {
+            feature.Styles.Add(new SymbolStyle
+            {
+                SymbolType = SymbolType.Triangle,
+                SymbolRotation = 180,
+                SymbolScale = 1,
+                Fill = poopColor,
+                SymbolOffset = new Offset(0, 16)
+            });
+        }
 
         return feature;
     }
