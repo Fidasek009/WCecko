@@ -15,8 +15,8 @@ namespace WCecko.Model.Map;
 public class MapService
 {
     public const string POINTS_LAYER_NAME = "user_points";
-    public const int IMAGE_MAX_HEIGHT = 256;
-    public const int IMAGE_MAX_WIDTH = 512;
+    public const int IMAGE_MAX_HEIGHT = 400;
+    public const int IMAGE_MAX_WIDTH = 800;
 
     private readonly MapDatabaseService _mapDatabaseService;
     private readonly RatingDatabaseService _ratingDatabaseService;
