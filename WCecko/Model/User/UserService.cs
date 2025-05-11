@@ -1,8 +1,8 @@
 ﻿namespace WCecko.Model.User;
 
-public class UserService(UserDatabaseService userDatabaseService)
+public class UserService(DatabaseService db)
 {
-    private readonly UserDatabaseService _userDatabaseService = userDatabaseService;
+    private readonly UserDatabaseService _userDatabaseService = new(db.GetConnection());
     public event EventHandler<User?> UserChanged = delegate { };
 
     private User? _currentUser;

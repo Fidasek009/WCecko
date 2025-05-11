@@ -48,18 +48,10 @@ public static class MauiProgram
         builder.Services.AddTransientPopup<AddRatingPopup, AddRatingViewModel>();
 
 
-        // DB services
+        // Data services
         builder.Services.AddSingleton<DatabaseService>();
-        builder.Services.AddSingleton<SQLiteAsyncConnection>(provider =>
-                provider.GetRequiredService<DatabaseService>().GetConnection());
-
-        builder.Services.AddSingleton<UserDatabaseService>();
         builder.Services.AddSingleton<UserService>();
-
-        builder.Services.AddSingleton<MapDatabaseService>();
         builder.Services.AddSingleton<MapService>();
-
-        builder.Services.AddSingleton<RatingDatabaseService>();
         builder.Services.AddSingleton<RatingService>();
 
 

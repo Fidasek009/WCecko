@@ -29,10 +29,10 @@ public class MapService
 
     private static readonly int _iconId = RegisterBitmapAsync("poop.png");
 
-    public MapService(MapDatabaseService mapDatabaseService, UserService userService, RatingDatabaseService ratingDatabaseService)
+    public MapService(DatabaseService db, UserService userService)
     {
-        _mapDatabaseService = mapDatabaseService;
-        _ratingDatabaseService = ratingDatabaseService;
+        _mapDatabaseService = new(db.GetConnection());
+        _ratingDatabaseService = new(db.GetConnection());
         _userService = userService;
 
         MapControl = new MapControl();

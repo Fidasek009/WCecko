@@ -3,9 +3,9 @@ using WCecko.Model.User;
 
 namespace WCecko.Model.Rating;
 
-public class RatingService(RatingDatabaseService ratingDatabaseService, UserService userService)
+public class RatingService(DatabaseService db, UserService userService)
 {
-    private readonly RatingDatabaseService _ratingDatabaseService = ratingDatabaseService;
+    private readonly RatingDatabaseService _ratingDatabaseService = new(db.GetConnection());
     private readonly UserService _userService = userService;
 
 
