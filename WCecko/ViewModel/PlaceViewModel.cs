@@ -1,4 +1,4 @@
-namespace WCecko.ViewModel;
+﻿namespace WCecko.ViewModel;
 
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -38,14 +38,14 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     async partial void OnPlaceIdChanged(int value)
     {
         var place = await _mapService.GetPlaceAsync(value);
-        if (place == null)
+        if (place is null)
             return;
 
         Name = place.Title;
         Description = place.Description;
         ModifyPermission = CheckModifyPermission(place.CreatedBy);
 
-        if (place.ImagePath == null || !File.Exists(place.ImagePath))
+        if (place.ImagePath is null || !File.Exists(place.ImagePath))
             PlaceImage = null;
         else
             PlaceImage = ImageSource.FromFile(place.ImagePath);
@@ -57,7 +57,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     private bool CheckModifyPermission(string pointCreator)
     {
         User? user = _userService.CurrentUser;
-        if (user == null)
+        if (user is null)
             return false;
 
         if (user.HasPermission(UserPermission.ModifyAllPlaces))

@@ -54,7 +54,7 @@ public partial class MainViewModel : ObservableObject
             MapControl? mapControl = sender as MapControl;
             Map? map = mapControl?.Map;
 
-            if (map!.Navigator?.Viewport == null)
+            if (map!.Navigator?.Viewport is null)
             {
                 await Shell.Current.DisplayAlert("Error", "Unable to determine map position.", "OK");
                 return;
@@ -90,7 +90,7 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            if (e.MapInfo?.Feature == null)
+            if (e.MapInfo?.Feature is null)
                 return;
 
             // Only handle clicks on the points layer

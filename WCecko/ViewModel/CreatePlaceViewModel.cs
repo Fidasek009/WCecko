@@ -47,7 +47,7 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
                 PickerTitle = "Select an image",
                 FileTypes = FilePickerFileType.Images
             });
-            if (image == null)
+            if (image is null)
                 return;
 
             using Stream stream = await image.OpenReadAsync();
@@ -68,7 +68,7 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
         try
         {
             FileResult? photo = await MediaPicker.CapturePhotoAsync();
-            if (photo == null)
+            if (photo is null)
                 return;
 
             using Stream stream = await photo.OpenReadAsync();

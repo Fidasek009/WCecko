@@ -97,7 +97,7 @@ public partial class RatingsViewModel : ObservableObject
     private async Task LoadRatings()
     {
         IReadOnlyList<Rating> ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
-        if (ratings == null)
+        if (ratings is null)
             return;
         Ratings = [.. ratings];
         UpdateRatingStats();
@@ -112,7 +112,7 @@ public partial class RatingsViewModel : ObservableObject
             return;
 
         var rating = await _ratingService.CreateRatingAsync(PlaceId, resultViewModel.Stars, resultViewModel.Comment);
-        if (rating == null)
+        if (rating is null)
             return;
 
         Ratings.Add(rating);
