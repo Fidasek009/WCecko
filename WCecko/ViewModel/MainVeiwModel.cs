@@ -1,3 +1,5 @@
+namespace WCecko.ViewModel;
+
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -5,12 +7,12 @@ using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
+using TappedEventArgs = Mapsui.UI.TappedEventArgs;
+
 using WCecko.Model.Map;
 using WCecko.Model.User;
 using WCecko.View;
-using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
-namespace WCecko.ViewModel;
 
 public partial class MainViewModel : ObservableObject
 {
@@ -49,8 +51,8 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            var mapControl = sender as MapControl;
-            var map = mapControl?.Map;
+            MapControl? mapControl = sender as MapControl;
+            Map? map = mapControl?.Map;
 
             if (map!.Navigator?.Viewport == null)
             {
@@ -59,10 +61,10 @@ public partial class MainViewModel : ObservableObject
             }
 
             // extract click location to map coordinates
-            var screenPosition = e.ScreenPosition;
-            var mapPosition = map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
+            MPoint screenPosition = e.ScreenPosition;
+            MPoint mapPosition = map.Navigator.Viewport.ScreenToWorld(screenPosition.X, screenPosition.Y);
 
-            var popupResult = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
+            object? popupResult = await _popupService.ShowPopupAsync<CreatePlaceViewModel>();
             if (popupResult is not CreatePlaceViewModel resultViewModel)
                 return;
 
@@ -95,7 +97,7 @@ public partial class MainViewModel : ObservableObject
             if (e.MapInfo.Layer!.Name != MapService.POINTS_LAYER_NAME)
                 return;
 
-            var feature = e.MapInfo.Feature;
+            IFeature feature = e.MapInfo.Feature;
 
             if (feature["ID"] is not int placeId)
             {

@@ -1,7 +1,8 @@
+namespace WCecko.Model.Map;
+
 using Mapsui;
 using SQLite;
 
-namespace WCecko.Model.Map;
 
 public class MapDatabaseService(SQLiteAsyncConnection db)
 {
@@ -9,7 +10,7 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<Place?> CreatePlaceAsync(MPoint mPoint, string username, string title, string description, ImageSource? image)
     {
-        var newPlace = new Place
+        Place newPlace = new Place
         {
             Location = mPoint,
             Title = title,
@@ -38,7 +39,7 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<bool> DeletePlaceAsync(int id)
     {
-        var place = await GetPlaceAsync(id);
+        Place? place = await GetPlaceAsync(id);
         if (place == null)
             return false;
 
@@ -50,14 +51,14 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<bool> UpdatePlaceAsync(Place place)
     {
-        var existingPlace = await GetPlaceAsync(place.Id);
+        Place? existingPlace = await GetPlaceAsync(place.Id);
         if (existingPlace == null)
             return false;
 
         if (existingPlace.ImagePath != null && place.ImagePath != existingPlace.ImagePath)
             File.Delete(existingPlace.ImagePath);
 
-        var newPlace = new Place
+        Place newPlace = new Place
         {
             Id = place.Id,
             Location = place.Location,
@@ -72,7 +73,7 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<IReadOnlyList<Place>> GetAllPlacesAsync()
     {
-        var places = await _db.Table<Place>().ToListAsync();
+        List<Place> places = await _db.Table<Place>().ToListAsync();
         return places.AsReadOnly();
     }
 }

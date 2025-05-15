@@ -1,6 +1,7 @@
+namespace WCecko.Model.Rating;
+
 using WCecko.Model.User;
 
-namespace WCecko.Model.Rating;
 
 public class RatingService(DatabaseService db, UserService userService)
 {
@@ -10,7 +11,7 @@ public class RatingService(DatabaseService db, UserService userService)
 
     public async Task<Rating?> CreateRatingAsync(int placeId, int stars, string comment)
     {
-        var user = _userService.CurrentUser;
+        User? user = _userService.CurrentUser;
         if (user == null)
             return null;
 
@@ -22,7 +23,7 @@ public class RatingService(DatabaseService db, UserService userService)
 
     public async Task<Rating?> GetRatingAsync(int id)
     {
-        var rating = await _ratingDatabaseService.GetRatingAsync(id);
+        Rating? rating = await _ratingDatabaseService.GetRatingAsync(id);
         if (rating == null)
             return null;
 
@@ -32,7 +33,7 @@ public class RatingService(DatabaseService db, UserService userService)
 
     private bool CheckModifyPermissions(string creator)
     {
-        var user = _userService.CurrentUser;
+        User? user = _userService.CurrentUser;
         if (user == null)
             return false;
 
@@ -63,10 +64,10 @@ public class RatingService(DatabaseService db, UserService userService)
 
     public async Task<IReadOnlyList<Rating>> GetPlaceRatingsAsync(int placeId)
     {
-        var ratings = await _ratingDatabaseService.GetPlaceRatingsAsync(placeId);
+        IReadOnlyList<Rating> ratings = await _ratingDatabaseService.GetPlaceRatingsAsync(placeId);
 
         // inject modify permissions
-        foreach (var rating in ratings)
+        foreach (Rating rating in ratings)
             rating.ModifyPermission = CheckModifyPermissions(rating.CreatedBy);
 
         return ratings;

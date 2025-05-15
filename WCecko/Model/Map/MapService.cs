@@ -1,15 +1,17 @@
+namespace WCecko.Model.Map;
+
 using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
-using WCecko.Model.Rating;
-using WCecko.Model.User;
 using Brush = Mapsui.Styles.Brush;
 using Color = Mapsui.Styles.Color;
 
-namespace WCecko.Model.Map;
+using WCecko.Model.Rating;
+using WCecko.Model.User;
+
 
 public class MapService
 {
@@ -56,9 +58,9 @@ public class MapService
         try
         {
             string resourceName = $"WCecko.Resources.Images.{imageName}";
-            var assembly = typeof(MapService).Assembly;
+            System.Reflection.Assembly assembly = typeof(MapService).Assembly;
 
-            var stream = assembly.GetManifestResourceStream(resourceName);
+            Stream? stream = assembly.GetManifestResourceStream(resourceName);
             if (stream == null)
             {
                 Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
@@ -76,14 +78,14 @@ public class MapService
 
     public async Task<bool> CreatePlaceAsync(MPoint mPoint, string title, string description, ImageSource? image)
     {
-        var user = _userService.CurrentUser;
+        User? user = _userService.CurrentUser;
         if (user == null)
             return false;
 
         if (!user.HasPermission(UserPermission.CreatePlaces))
             return false;
 
-        var newPlace = await _mapDatabaseService.CreatePlaceAsync(mPoint, user.Username, title, description, image);
+        Place? newPlace = await _mapDatabaseService.CreatePlaceAsync(mPoint, user.Username, title, description, image);
         if (newPlace == null)
             return false;
 
@@ -99,7 +101,7 @@ public class MapService
 
     private bool CheckModifyPermission(string pointCreator)
     {
-        var user = _userService.CurrentUser;
+        User? user = _userService.CurrentUser;
         if (user == null)
             return false;
 
@@ -114,18 +116,18 @@ public class MapService
 
     public async Task<bool> DeletePlaceAsync(int id)
     {
-        var place = await _mapDatabaseService.GetPlaceAsync(id);
+        Place? place = await _mapDatabaseService.GetPlaceAsync(id);
         if (place == null)
             return false;
 
         if (!CheckModifyPermission(place.CreatedBy))
             return false;
 
-        var ratingsDeleted = await _ratingDatabaseService.DeletePlaceRatingsAsync(id);
+        bool ratingsDeleted = await _ratingDatabaseService.DeletePlaceRatingsAsync(id);
         if (!ratingsDeleted)
             return false;
 
-        var placeDeleted = await _mapDatabaseService.DeletePlaceAsync(id);
+        bool placeDeleted = await _mapDatabaseService.DeletePlaceAsync(id);
         if (!placeDeleted)
             return false;
 
@@ -135,14 +137,14 @@ public class MapService
 
     public async Task<bool> UpdatePlaceAsync(int id, string title, string description, ImageSource? image)
     {
-        var existingPlace = await _mapDatabaseService.GetPlaceAsync(id);
+        Place? existingPlace = await _mapDatabaseService.GetPlaceAsync(id);
         if (existingPlace == null)
             return false;
 
         if (!CheckModifyPermission(existingPlace.CreatedBy))
             return false;
 
-        var newPlace = new Place
+        Place newPlace = new Place
         {
             Id = id,
             Title = title,
@@ -152,7 +154,7 @@ public class MapService
             Location = existingPlace.Location
         };
 
-        var result = await _mapDatabaseService.UpdatePlaceAsync(newPlace);
+        bool result = await _mapDatabaseService.UpdatePlaceAsync(newPlace);
         if (!result)
             return false;
 
@@ -161,12 +163,12 @@ public class MapService
 
     public async Task AddAllPlacesToMap()
     {
-        var places = await _mapDatabaseService.GetAllPlacesAsync();
-        var features = _pointsLayer.Features?.ToList() ?? [];
+        IReadOnlyList<Place> places = await _mapDatabaseService.GetAllPlacesAsync();
+        List<IFeature> features = _pointsLayer.Features?.ToList() ?? [];
 
-        foreach (var place in places)
+        foreach (Place place in places)
         {
-            var feature = CreatePoint(place.Location, place.Id);
+            IFeature feature = CreatePoint(place.Location, place.Id);
             features.Add(feature);
         }
 
@@ -177,8 +179,8 @@ public class MapService
 
     public void AddPointToMap(MPoint mapPosition, int id)
     {
-        var newPoint = CreatePoint(mapPosition, id);
-        var features = _pointsLayer.Features?.ToList() ?? [];
+        IFeature newPoint = CreatePoint(mapPosition, id);
+        List<IFeature> features = _pointsLayer.Features?.ToList() ?? [];
 
         features.Add(newPoint);
         _pointsLayer.Features = features;
@@ -188,8 +190,8 @@ public class MapService
 
     public void RemovePointFromMap(int id)
     {
-        var features = _pointsLayer.Features?.ToList() ?? [];
-        var featureToRemove = features.FirstOrDefault(f => f["ID"] != null && (int)f["ID"] == id);
+        List<IFeature> features = _pointsLayer.Features?.ToList() ?? [];
+        IFeature? featureToRemove = features.FirstOrDefault(f => f["ID"] != null && (int)f["ID"] == id);
         if (featureToRemove == null)
             return;
 
@@ -201,10 +203,10 @@ public class MapService
 
     public static IFeature CreatePoint(MPoint mPoint, int id)
     {
-        var feature = new PointFeature(mPoint);
+        PointFeature feature = new PointFeature(mPoint);
         feature["ID"] = id;
 
-        var poopColor = new Brush(new Color(100, 69, 40));
+        Brush poopColor = new Brush(new Color(100, 69, 40));
 
 
         if (_iconId != -1)

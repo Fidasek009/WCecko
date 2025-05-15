@@ -1,6 +1,7 @@
+namespace WCecko.Model.User;
+
 using SQLite;
 
-namespace WCecko.Model.User;
 
 public class User
 {

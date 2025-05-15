@@ -18,14 +18,14 @@ public class UserService(DatabaseService db)
 
     public async Task<bool> RegisterUserAsync(string username, string password)
     {
-        var user = await _userDatabaseService.RegisterUserAsync(username, password);
+        User? user = await _userDatabaseService.RegisterUserAsync(username, password);
         CurrentUser = user;
         return user != null;
     }
 
     public async Task<bool> AuthenticateUserAsync(string username, string password)
     {
-        var user = await _userDatabaseService.AuthenticateUserAsync(username, password);
+        User? user = await _userDatabaseService.AuthenticateUserAsync(username, password);
         CurrentUser = user;
         return user != null;
     }

@@ -1,9 +1,10 @@
+namespace WCecko.ViewModel;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using WCecko.Model.User;
 
-namespace WCecko.ViewModel;
 
 public partial class RegisterViewModel(UserService userService) : ObservableObject
 {
@@ -35,7 +36,7 @@ public partial class RegisterViewModel(UserService userService) : ObservableObje
             return;
         }
 
-        var result = await _userService.RegisterUserAsync(Username, Password);
+        bool result = await _userService.RegisterUserAsync(Username, Password);
 
         if (!result)
         {

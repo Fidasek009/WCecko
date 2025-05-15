@@ -7,7 +7,7 @@ public static class ImageUtils
     public static ImageSource ResizeImageKeepAspectRatio(Stream inputStream, int maxWidth, int maxHeight)
     {
         inputStream.Position = 0;
-        using var originalBitmap = SkiaSharp.SKBitmap.Decode(inputStream);
+        using SkiaSharp.SKBitmap originalBitmap = SkiaSharp.SKBitmap.Decode(inputStream);
 
         int origWidth = originalBitmap.Width;
         int origHeight = originalBitmap.Height;
@@ -20,9 +20,9 @@ public static class ImageUtils
         int newWidth = (int)(origWidth * ratio);
         int newHeight = (int)(origHeight * ratio);
 
-        using var resizedBitmap = originalBitmap.Resize(new SkiaSharp.SKImageInfo(newWidth, newHeight), SkiaSharp.SKFilterQuality.High);
-        using var image = SkiaSharp.SKImage.FromBitmap(resizedBitmap);
-        var resizedImage = image.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 80).ToArray(); // Compress to 80% quality
+        using SkiaSharp.SKBitmap resizedBitmap = originalBitmap.Resize(new SkiaSharp.SKImageInfo(newWidth, newHeight), SkiaSharp.SKFilterQuality.High);
+        using SkiaSharp.SKImage image = SkiaSharp.SKImage.FromBitmap(resizedBitmap);
+        byte[] resizedImage = image.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 80).ToArray(); // Compress to 80% quality
 
         return ImageSource.FromStream(() => new MemoryStream(resizedImage));
     }
@@ -42,8 +42,8 @@ public static class ImageUtils
         Directory.CreateDirectory(IMAGE_DIR);
         string imagePath = Path.Combine(IMAGE_DIR, filename);
 
-        using var stream = await imageStream.Stream(CancellationToken.None);
-        using var fileStream = File.Create(imagePath);
+        using Stream stream = await imageStream.Stream(CancellationToken.None);
+        using FileStream fileStream = File.Create(imagePath);
         await stream.CopyToAsync(fileStream);
 
         return imagePath;

@@ -8,10 +8,11 @@ namespace WCecko.Model.User;
 /// </remarks>
 public enum UserPermission
 {
-    CreatePlaces,
-    ModifyOwnPlaces,
-    ModifyAllPlaces,
-    CreateRatings,
-    ModifyOwnRatings,
-    ModifyAllRatings,
+    Unknown = 0,
+    CreatePlaces = 1,
+    ModifyOwnPlaces = 2,
+    ModifyAllPlaces = 3,
+    CreateRatings = 4,
+    ModifyOwnRatings = 5,
+    ModifyAllRatings = 6,
 }

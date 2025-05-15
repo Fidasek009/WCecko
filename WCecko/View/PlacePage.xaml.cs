@@ -1,6 +1,6 @@
-using WCecko.ViewModel;
-
 namespace WCecko.View;
+
+using WCecko.ViewModel;
 
 public partial class PlacePage : ContentPage
 {

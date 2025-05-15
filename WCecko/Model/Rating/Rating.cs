@@ -1,8 +1,9 @@
+namespace WCecko.Model.Rating;
+
 using SQLite;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WCecko.Model.Rating;
 
 public class Rating : INotifyPropertyChanged
 {

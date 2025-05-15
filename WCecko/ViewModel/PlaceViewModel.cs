@@ -1,3 +1,5 @@
+namespace WCecko.ViewModel;
+
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -6,7 +8,6 @@ using WCecko.Model.Map;
 using WCecko.Model.Rating;
 using WCecko.Model.User;
 
-namespace WCecko.ViewModel;
 
 [QueryProperty("PlaceId", "PlaceId")]
 public partial class PlaceViewModel(IPopupService popupService, MapService mapService, UserService userService, RatingService ratingService) : ObservableObject
@@ -55,7 +56,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
 
     private bool CheckModifyPermission(string pointCreator)
     {
-        var user = _userService.CurrentUser;
+        User? user = _userService.CurrentUser;
         if (user == null)
             return false;
 
@@ -105,11 +106,11 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     [RelayCommand]
     async Task DeletePlace()
     {
-        var confirm = await Shell.Current.DisplayAlert("Delete Place", "Are you sure you want to delete this place?", "Yes", "No");
+        bool confirm = await Shell.Current.DisplayAlert("Delete Place", "Are you sure you want to delete this place?", "Yes", "No");
         if (!confirm)
             return;
 
-        var result = await _mapService.DeletePlaceAsync(PlaceId);
+        bool result = await _mapService.DeletePlaceAsync(PlaceId);
         if (!result)
         {
             await Shell.Current.DisplayAlert("Error", "Failed to delete place.", "OK");

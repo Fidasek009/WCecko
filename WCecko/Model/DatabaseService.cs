@@ -1,6 +1,7 @@
+namespace WCecko.Model;
+
 using SQLite;
 
-namespace WCecko.Model;
 
 public class DatabaseService
 {

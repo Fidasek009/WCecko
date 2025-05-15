@@ -2,6 +2,7 @@ namespace WCecko.Model.User;
 
 public enum UserRole
 {
-    Admin = 0,
-    User = 1,
+    Unknown = 0,
+    Admin = 1,
+    User = 2,
 }

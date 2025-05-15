@@ -1,7 +1,8 @@
+namespace WCecko.Model.Map;
+
 using Mapsui;
 using SQLite;
 
-namespace WCecko.Model.Map;
 
 public class Place
 {

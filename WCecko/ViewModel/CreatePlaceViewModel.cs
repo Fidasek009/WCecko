@@ -1,3 +1,4 @@
+namespace WCecko.ViewModel;
 
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,7 +7,6 @@ using CommunityToolkit.Mvvm.Input;
 using WCecko.Model;
 using WCecko.Model.Map;
 
-namespace WCecko.ViewModel;
 
 public partial class CreatePlaceViewModel(IPopupService popupService) : ObservableObject
 {
@@ -42,7 +42,7 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     {
         try
         {
-            var image = await FilePicker.PickAsync(new PickOptions
+            FileResult? image = await FilePicker.PickAsync(new PickOptions
             {
                 PickerTitle = "Select an image",
                 FileTypes = FilePickerFileType.Images
@@ -50,8 +50,8 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
             if (image == null)
                 return;
 
-            using var stream = await image.OpenReadAsync();
-            using var memoryStream = new MemoryStream();
+            using Stream stream = await image.OpenReadAsync();
+            using MemoryStream memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
         }
@@ -67,12 +67,12 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     {
         try
         {
-            var photo = await MediaPicker.CapturePhotoAsync();
+            FileResult? photo = await MediaPicker.CapturePhotoAsync();
             if (photo == null)
                 return;
 
-            using var stream = await photo.OpenReadAsync();
-            using var memoryStream = new MemoryStream();
+            using Stream stream = await photo.OpenReadAsync();
+            using MemoryStream memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
         }

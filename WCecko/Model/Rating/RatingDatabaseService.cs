@@ -1,6 +1,7 @@
+namespace WCecko.Model.Rating;
+
 using SQLite;
 
-namespace WCecko.Model.Rating;
 
 public class RatingDatabaseService(SQLiteAsyncConnection db)
 {
@@ -8,7 +9,7 @@ public class RatingDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<Rating?> CreateRatingAsync(int placeId, string username, int stars, string comment)
     {
-        var newRating = new Rating
+        Rating newRating = new Rating
         {
             PlaceId = placeId,
             Stars = stars,
@@ -46,13 +47,13 @@ public class RatingDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<IReadOnlyList<Rating>> GetPlaceRatingsAsync(int placeId)
     {
-        var ratings = await _db.Table<Rating>().Where(x => x.PlaceId == placeId).ToListAsync();
+        List<Rating> ratings = await _db.Table<Rating>().Where(x => x.PlaceId == placeId).ToListAsync();
         return ratings.AsReadOnly();
     }
 
     public async Task<bool> DeletePlaceRatingsAsync(int placeId)
     {
-        var rows = await _db.ExecuteAsync($"DELETE FROM {nameof(Rating)} WHERE PlaceId = ?", placeId);
+        int rows = await _db.ExecuteAsync($"DELETE FROM {nameof(Rating)} WHERE PlaceId = ?", placeId);
         return rows >= 0;
     }
 }

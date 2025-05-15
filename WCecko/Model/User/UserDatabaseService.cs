@@ -1,7 +1,8 @@
+namespace WCecko.Model.User;
+
 using SQLite;
 using BCryptHelper = BCrypt.Net.BCrypt;
 
-namespace WCecko.Model.User;
 
 public class UserDatabaseService(SQLiteAsyncConnection db)
 {
@@ -9,14 +10,14 @@ public class UserDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<User?> RegisterUserAsync(string username, string password)
     {
-        var existingUser = await _db.Table<User>()
+        User existingUser = await _db.Table<User>()
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
 
         if (existingUser != null)
             return null;
 
-        var newUser = new User
+        User newUser = new User
         {
             Username = username,
             PasswordHash = BCryptHelper.HashPassword(password),
@@ -29,7 +30,7 @@ public class UserDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<User?> AuthenticateUserAsync(string username, string password)
     {
-        var user = await _db.Table<User>()
+        User user = await _db.Table<User>()
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
 

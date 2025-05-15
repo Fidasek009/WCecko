@@ -1,3 +1,5 @@
+namespace WCecko.ViewModel;
+
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -6,7 +8,6 @@ using System.Collections.Specialized;
 
 using WCecko.Model.Rating;
 
-namespace WCecko.ViewModel;
 
 public partial class RatingsViewModel : ObservableObject
 {
@@ -77,7 +78,7 @@ public partial class RatingsViewModel : ObservableObject
         int[] starCounts = new int[5];
         int totalStars = 0;
 
-        foreach (var r in Ratings)
+        foreach (Rating r in Ratings)
         {
             starCounts[r.Stars - 1]++;
             totalStars += r.Stars;
@@ -95,7 +96,7 @@ public partial class RatingsViewModel : ObservableObject
 
     private async Task LoadRatings()
     {
-        var ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
+        IReadOnlyList<Rating> ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
         if (ratings == null)
             return;
         Ratings = [.. ratings];
@@ -106,7 +107,7 @@ public partial class RatingsViewModel : ObservableObject
     [RelayCommand]
     async Task AddRating()
     {
-        var result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
+        object? result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
         if (result is not AddRatingViewModel resultViewModel)
             return;
 
@@ -120,11 +121,11 @@ public partial class RatingsViewModel : ObservableObject
     [RelayCommand]
     async Task DeleteRating(Rating rating)
     {
-        var confirm = await Shell.Current.DisplayAlert("Delete Rating", "Are you sure you want to delete this rating?", "Yes", "No");
+        bool confirm = await Shell.Current.DisplayAlert("Delete Rating", "Are you sure you want to delete this rating?", "Yes", "No");
         if (!confirm)
             return;
 
-        var deleteResult = await _ratingService.DeleteRatingAsync(rating);
+        bool deleteResult = await _ratingService.DeleteRatingAsync(rating);
         if (!deleteResult)
         {
             await Shell.Current.DisplayAlert("Error", "Failed to delete rating.", "OK");
@@ -147,13 +148,13 @@ public partial class RatingsViewModel : ObservableObject
         if (editResult is not AddRatingViewModel resultViewModel)
             return;
 
-        var prevStars = rating.Stars;
-        var prevComment = rating.Comment;
+        int prevStars = rating.Stars;
+        string prevComment = rating.Comment;
 
         rating.Stars = resultViewModel.Stars;
         rating.Comment = resultViewModel.Comment;
 
-        var updateResult = await _ratingService.UpdateRatingAsync(rating);
+        bool updateResult = await _ratingService.UpdateRatingAsync(rating);
         if (!updateResult)
         {
             rating.Stars = prevStars;

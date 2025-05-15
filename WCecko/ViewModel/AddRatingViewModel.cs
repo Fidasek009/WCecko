@@ -1,9 +1,9 @@
+namespace WCecko.ViewModel;
 
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace WCecko.ViewModel;
 
 [QueryProperty("Stars", "Stars")]
 [QueryProperty("Comment", "Comment")]

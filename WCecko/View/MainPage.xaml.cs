@@ -1,7 +1,7 @@
+namespace WCecko;
+
 using WCecko.Model.Map;
 using WCecko.ViewModel;
-
-namespace WCecko;
 
 public partial class MainPage : ContentPage
 {
@@ -10,7 +10,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
 
-        var mapControl = mapService.MapControl;
+        Mapsui.UI.Maui.MapControl mapControl = mapService.MapControl;
 
         mapControl.LongTap += vm.OnMapLongTapped;
         mapControl.Info += vm.OnMapFeatureInfo;

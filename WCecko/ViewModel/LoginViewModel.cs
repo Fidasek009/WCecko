@@ -1,9 +1,10 @@
+namespace WCecko.ViewModel;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using WCecko.Model.User;
 
-namespace WCecko.ViewModel;
 
 public partial class LoginViewModel(UserService userService) : ObservableObject
 {
@@ -20,7 +21,7 @@ public partial class LoginViewModel(UserService userService) : ObservableObject
     [RelayCommand]
     async Task Login()
     {
-        var result = await _userService.AuthenticateUserAsync(Username, Password);
+        bool result = await _userService.AuthenticateUserAsync(Username, Password);
 
         if (!result)
         {

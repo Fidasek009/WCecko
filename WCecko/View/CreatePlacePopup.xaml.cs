@@ -1,8 +1,8 @@
+namespace WCecko.View;
+
 using CommunityToolkit.Maui.Views;
 
 using WCecko.ViewModel;
-
-namespace WCecko.View;
 
 public partial class CreatePlacePopup : Popup
 {
