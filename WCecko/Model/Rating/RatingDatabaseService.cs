@@ -1,5 +1,3 @@
-﻿
-
 using SQLite;
 
 namespace WCecko.Model.Rating;

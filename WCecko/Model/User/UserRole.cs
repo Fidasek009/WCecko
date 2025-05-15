@@ -1,4 +1,4 @@
-﻿namespace WCecko.Model.User;
+namespace WCecko.Model.User;
 
 public enum UserRole
 {

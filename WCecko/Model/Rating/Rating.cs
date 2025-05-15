@@ -1,4 +1,4 @@
-﻿using SQLite;
+using SQLite;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -33,7 +33,8 @@ public class Rating : INotifyPropertyChanged
     private string _comment = string.Empty;
 
     [NotNull]
-    public string Comment {
+    public string Comment
+    {
         get => _comment;
         set
         {

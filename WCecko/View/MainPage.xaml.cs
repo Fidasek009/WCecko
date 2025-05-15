@@ -1,4 +1,4 @@
-﻿using WCecko.Model.Map;
+using WCecko.Model.Map;
 using WCecko.ViewModel;
 
 namespace WCecko;
@@ -9,7 +9,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         BindingContext = vm;
-        
+
         var mapControl = mapService.MapControl;
 
         mapControl.LongTap += vm.OnMapLongTapped;

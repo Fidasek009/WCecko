@@ -1,4 +1,4 @@
-﻿
+
 namespace WCecko.Model.User;
 
 public static class UserRoleExtensions

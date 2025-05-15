@@ -1,4 +1,4 @@
-﻿using WCecko.View;
+using WCecko.View;
 
 namespace WCecko;
 

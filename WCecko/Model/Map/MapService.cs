@@ -1,14 +1,13 @@
-﻿using Mapsui;
+using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Styles;
-using Color = Mapsui.Styles.Color;
-using Brush = Mapsui.Styles.Brush;
-
-using WCecko.Model.User;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
-using WCecko.Model.Rating;
 using System.Diagnostics;
+using WCecko.Model.Rating;
+using WCecko.Model.User;
+using Brush = Mapsui.Styles.Brush;
+using Color = Mapsui.Styles.Color;
 
 namespace WCecko.Model.Map;
 
@@ -21,7 +20,7 @@ public class MapService
     private readonly MapDatabaseService _mapDatabaseService;
     private readonly RatingDatabaseService _ratingDatabaseService;
     private readonly UserService _userService;
-    
+
     public MapControl MapControl { get; }
     public Mapsui.Map Map => MapControl.Map;
 
@@ -60,7 +59,8 @@ public class MapService
             var assembly = typeof(MapService).Assembly;
 
             var stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null) {
+            if (stream == null)
+            {
                 Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
                 return -1;
             }

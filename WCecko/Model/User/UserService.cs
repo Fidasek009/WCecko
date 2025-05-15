@@ -1,4 +1,4 @@
-﻿namespace WCecko.Model.User;
+namespace WCecko.Model.User;
 
 public class UserService(DatabaseService db)
 {
@@ -18,7 +18,7 @@ public class UserService(DatabaseService db)
 
     public async Task<bool> RegisterUserAsync(string username, string password)
     {
-       var user = await _userDatabaseService.RegisterUserAsync(username, password);
+        var user = await _userDatabaseService.RegisterUserAsync(username, password);
         CurrentUser = user;
         return user != null;
     }

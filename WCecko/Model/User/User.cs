@@ -1,4 +1,4 @@
-﻿using SQLite;
+using SQLite;
 
 namespace WCecko.Model.User;
 

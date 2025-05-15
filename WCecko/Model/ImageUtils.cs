@@ -1,4 +1,3 @@
-﻿
 namespace WCecko.Model;
 
 public static class ImageUtils

@@ -1,15 +1,14 @@
-﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
-using TappedEventArgs = Mapsui.UI.TappedEventArgs;
-
 using WCecko.Model.Map;
 using WCecko.Model.User;
 using WCecko.View;
+using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 namespace WCecko.ViewModel;
 
@@ -104,7 +103,7 @@ public partial class MainViewModel : ObservableObject
                 return;
             }
 
-            await Shell.Current.GoToAsync(nameof(PlacePage), new Dictionary<string, object> 
+            await Shell.Current.GoToAsync(nameof(PlacePage), new Dictionary<string, object>
                 {
                     { "PlaceId", placeId }
                 }

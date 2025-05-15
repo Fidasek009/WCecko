@@ -1,4 +1,3 @@
-﻿
 using WCecko.Model.User;
 
 namespace WCecko.Model.Rating;
@@ -20,7 +19,7 @@ public class RatingService(DatabaseService db, UserService userService)
 
         return await _ratingDatabaseService.CreateRatingAsync(placeId, user.Username, stars, comment);
     }
-    
+
     public async Task<Rating?> GetRatingAsync(int id)
     {
         var rating = await _ratingDatabaseService.GetRatingAsync(id);
@@ -45,7 +44,7 @@ public class RatingService(DatabaseService db, UserService userService)
 
         return false;
     }
-    
+
     public async Task<bool> DeleteRatingAsync(Rating rating)
     {
         if (!CheckModifyPermissions(rating.CreatedBy))

@@ -4,9 +4,9 @@ namespace WCecko.View;
 
 public partial class PlacePage : ContentPage
 {
-	public PlacePage(PlaceViewModel vm)
-	{
-		InitializeComponent();
-		BindingContext = vm;
-	}
+    public PlacePage(PlaceViewModel vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+    }
 }

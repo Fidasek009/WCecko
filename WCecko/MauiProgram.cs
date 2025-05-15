@@ -1,12 +1,10 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
-using SQLite;
-
 using WCecko.Model;
-using WCecko.Model.User;
 using WCecko.Model.Map;
 using WCecko.Model.Rating;
+using WCecko.Model.User;
 using WCecko.View;
 using WCecko.ViewModel;
 

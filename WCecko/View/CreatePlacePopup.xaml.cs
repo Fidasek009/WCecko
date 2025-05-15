@@ -6,9 +6,9 @@ namespace WCecko.View;
 
 public partial class CreatePlacePopup : Popup
 {
-	public CreatePlacePopup(CreatePlaceViewModel vm)
-	{
-		InitializeComponent();
+    public CreatePlacePopup(CreatePlaceViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

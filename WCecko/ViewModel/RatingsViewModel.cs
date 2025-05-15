@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -73,7 +73,7 @@ public partial class RatingsViewModel : ObservableObject
             RatingMean = 0;
             return;
         }
-        
+
         int[] starCounts = new int[5];
         int totalStars = 0;
 
@@ -94,7 +94,7 @@ public partial class RatingsViewModel : ObservableObject
 
 
     private async Task LoadRatings()
-    {        
+    {
         var ratings = await _ratingService.GetPlaceRatingsAsync(PlaceId);
         if (ratings == null)
             return;
@@ -109,7 +109,7 @@ public partial class RatingsViewModel : ObservableObject
         var result = await _popupService.ShowPopupAsync<AddRatingViewModel>();
         if (result is not AddRatingViewModel resultViewModel)
             return;
-            
+
         var rating = await _ratingService.CreateRatingAsync(PlaceId, resultViewModel.Stars, resultViewModel.Comment);
         if (rating == null)
             return;

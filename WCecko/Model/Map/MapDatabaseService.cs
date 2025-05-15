@@ -1,4 +1,4 @@
-﻿using Mapsui;
+using Mapsui;
 using SQLite;
 
 namespace WCecko.Model.Map;
