@@ -22,7 +22,7 @@ public partial class RegisterViewModel(UserService userService) : ObservableObje
 
 
     [RelayCommand]
-    async Task Register()
+    private async Task Register()
     {
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {

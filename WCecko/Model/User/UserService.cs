@@ -20,14 +20,14 @@ public class UserService(DatabaseService db)
     {
         User? user = await _userDatabaseService.RegisterUserAsync(username, password);
         CurrentUser = user;
-        return user != null;
+        return user is not null;
     }
 
     public async Task<bool> AuthenticateUserAsync(string username, string password)
     {
         User? user = await _userDatabaseService.AuthenticateUserAsync(username, password);
         CurrentUser = user;
-        return user != null;
+        return user is not null;
     }
 
     public void Logout()

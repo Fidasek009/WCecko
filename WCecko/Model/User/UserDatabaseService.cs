@@ -14,10 +14,10 @@ public class UserDatabaseService(SQLiteAsyncConnection db)
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
 
-        if (existingUser != null)
+        if (existingUser is not null)
             return null;
 
-        User newUser = new User
+        User newUser = new()
         {
             Username = username,
             PasswordHash = BCryptHelper.HashPassword(password),
@@ -34,7 +34,7 @@ public class UserDatabaseService(SQLiteAsyncConnection db)
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync();
 
-        if (user == null)
+        if (user is null)
             return null;
 
         if (!BCryptHelper.Verify(password, user.PasswordHash))

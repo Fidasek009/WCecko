@@ -7,11 +7,10 @@ using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
-using TappedEventArgs = Mapsui.UI.TappedEventArgs;
-
 using WCecko.Model.Map;
 using WCecko.Model.User;
 using WCecko.View;
+using TappedEventArgs = Mapsui.UI.TappedEventArgs;
 
 
 public partial class MainViewModel : ObservableObject
@@ -36,7 +35,7 @@ public partial class MainViewModel : ObservableObject
 
 
     [RelayCommand]
-    async Task Logout()
+    private async Task Logout()
     {
         _userService.Logout();
         await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");

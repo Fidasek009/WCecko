@@ -19,7 +19,7 @@ public partial class LoginViewModel(UserService userService) : ObservableObject
 
 
     [RelayCommand]
-    async Task Login()
+    private async Task Login()
     {
         bool result = await _userService.AuthenticateUserAsync(Username, Password);
 
@@ -33,7 +33,7 @@ public partial class LoginViewModel(UserService userService) : ObservableObject
     }
 
     [RelayCommand]
-    async Task Register()
+    private async Task Register()
     {
         await Shell.Current.GoToAsync(nameof(RegisterPage));
     }

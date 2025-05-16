@@ -9,7 +9,7 @@ public class RatingDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<Rating?> CreateRatingAsync(int placeId, string username, int stars, string comment)
     {
-        Rating newRating = new Rating
+        Rating newRating = new()
         {
             PlaceId = placeId,
             Stars = stars,

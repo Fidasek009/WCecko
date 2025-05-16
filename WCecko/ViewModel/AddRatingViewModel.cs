@@ -21,13 +21,13 @@ public partial class AddRatingViewModel(IPopupService popupService) : Observable
     public partial string Comment { get; set; } = "";
 
     [RelayCommand]
-    async Task Cancel()
+    private async Task Cancel()
     {
         await _popupService.ClosePopupAsync(null);
     }
 
     [RelayCommand]
-    async Task Save()
+    private async Task Save()
     {
         await _popupService.ClosePopupAsync(this);
     }

@@ -5,10 +5,10 @@ using SQLite;
 
 public class DatabaseService
 {
-    const string DATABASE_FILE_NAME = "wcecko.db";
+    private const string DATABASE_FILE_NAME = "wcecko.db";
 
     // Windows: C:\Users\<user>\AppData\Local\Packages\com.companyname.wcecko_9zz4h110yvjzm\LocalState\wcecko.db
-    static readonly string path = Path.Combine(FileSystem.AppDataDirectory, DATABASE_FILE_NAME);
+    private static readonly string path = Path.Combine(FileSystem.AppDataDirectory, DATABASE_FILE_NAME);
 
     private readonly SQLiteAsyncConnection _db;
 

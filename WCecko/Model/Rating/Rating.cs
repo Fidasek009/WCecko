@@ -47,7 +47,7 @@ public class Rating : INotifyPropertyChanged
     }
 
     [Ignore]
-    public bool ModifyPermission { get; set; } = true;  // TODO: set to false later
+    public bool ModifyPermission { get; set; } = false;
 
 
     public event PropertyChangedEventHandler? PropertyChanged;

@@ -1,4 +1,4 @@
-﻿namespace WCecko.ViewModel;
+namespace WCecko.ViewModel;
 
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -71,7 +71,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
 
 
     [RelayCommand]
-    async Task EditPlace()
+    private async Task EditPlace()
     {
         var result = await _popupService.ShowPopupAsync<CreatePlaceViewModel>(
             onPresenting: vm =>
@@ -104,7 +104,7 @@ public partial class PlaceViewModel(IPopupService popupService, MapService mapSe
     }
 
     [RelayCommand]
-    async Task DeletePlace()
+    private async Task DeletePlace()
     {
         bool confirm = await Shell.Current.DisplayAlert("Delete Place", "Are you sure you want to delete this place?", "Yes", "No");
         if (!confirm)

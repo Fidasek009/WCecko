@@ -26,19 +26,19 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
 
 
     [RelayCommand]
-    async Task Cancel()
+    private async Task Cancel()
     {
         await _popupService.ClosePopupAsync(null);
     }
 
     [RelayCommand]
-    async Task Save()
+    private async Task Save()
     {
         await _popupService.ClosePopupAsync(this);
     }
 
     [RelayCommand]
-    async Task PickImage()
+    private async Task PickImage()
     {
         try
         {
@@ -51,9 +51,9 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
                 return;
 
             using Stream stream = await image.OpenReadAsync();
-            using MemoryStream memoryStream = new MemoryStream();
+            using MemoryStream memoryStream = new();
             await stream.CopyToAsync(memoryStream);
-            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
+            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
         catch (Exception ex)
         {
@@ -63,7 +63,7 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     }
 
     [RelayCommand]
-    async Task CaptureImage()
+    private async Task CaptureImage()
     {
         try
         {
@@ -72,9 +72,9 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
                 return;
 
             using Stream stream = await photo.OpenReadAsync();
-            using MemoryStream memoryStream = new MemoryStream();
+            using MemoryStream memoryStream = new();
             await stream.CopyToAsync(memoryStream);
-            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, MapService.IMAGE_MAX_HEIGHT, MapService.IMAGE_MAX_WIDTH);
+            PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
         catch (Exception ex)
         {
@@ -84,7 +84,7 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     }
 
     [RelayCommand]
-    void RemoveImage()
+    private void RemoveImage()
     {
         PlaceImage = null;
     }

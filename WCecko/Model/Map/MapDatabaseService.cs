@@ -10,12 +10,12 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
 
     public async Task<Place?> CreatePlaceAsync(MPoint mPoint, string username, string title, string description, ImageSource? image)
     {
-        Place newPlace = new Place
+        Place newPlace = new()
         {
             Location = mPoint,
             Title = title,
             Description = description,
-            ImagePath = image != null ? await ImageUtils.SaveImageAsync(image, $"{Guid.NewGuid()}.jpg") : null,
+            ImagePath = image is not null ? await ImageUtils.SaveImageAsync(image, $"{Guid.NewGuid()}.jpg") : null,
             CreatedBy = username,
         };
 
@@ -40,10 +40,10 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
     public async Task<bool> DeletePlaceAsync(int id)
     {
         Place? place = await GetPlaceAsync(id);
-        if (place == null)
+        if (place is null)
             return false;
 
-        if (place.ImagePath != null)
+        if (place.ImagePath is not null)
             File.Delete(place.ImagePath);
 
         return await _db.DeleteAsync<Place>(id) > 0;
@@ -52,19 +52,19 @@ public class MapDatabaseService(SQLiteAsyncConnection db)
     public async Task<bool> UpdatePlaceAsync(Place place)
     {
         Place? existingPlace = await GetPlaceAsync(place.Id);
-        if (existingPlace == null)
+        if (existingPlace is null)
             return false;
 
-        if (existingPlace.ImagePath != null && place.ImagePath != existingPlace.ImagePath)
+        if (existingPlace.ImagePath is not null && place.ImagePath != existingPlace.ImagePath)
             File.Delete(existingPlace.ImagePath);
 
-        Place newPlace = new Place
+        Place newPlace = new()
         {
             Id = place.Id,
             Location = place.Location,
             Title = place.Title,
             Description = place.Description,
-            ImagePath = place.ImagePath != null ? await ImageUtils.SaveImageAsync(place.ImagePath, $"{Guid.NewGuid()}.jpg") : null,
+            ImagePath = place.ImagePath is not null ? await ImageUtils.SaveImageAsync(place.ImagePath, $"{Guid.NewGuid()}.jpg") : null,
             CreatedBy = existingPlace.CreatedBy,
         };
 

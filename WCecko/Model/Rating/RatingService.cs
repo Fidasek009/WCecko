@@ -12,7 +12,7 @@ public class RatingService(DatabaseService db, UserService userService)
     public async Task<Rating?> CreateRatingAsync(int placeId, int stars, string comment)
     {
         User? user = _userService.CurrentUser;
-        if (user == null)
+        if (user is null)
             return null;
 
         if (!user.HasPermission(UserPermission.CreateRatings))
@@ -24,7 +24,7 @@ public class RatingService(DatabaseService db, UserService userService)
     public async Task<Rating?> GetRatingAsync(int id)
     {
         Rating? rating = await _ratingDatabaseService.GetRatingAsync(id);
-        if (rating == null)
+        if (rating is null)
             return null;
 
         rating.ModifyPermission = CheckModifyPermissions(rating.CreatedBy);
@@ -34,7 +34,7 @@ public class RatingService(DatabaseService db, UserService userService)
     private bool CheckModifyPermissions(string creator)
     {
         User? user = _userService.CurrentUser;
-        if (user == null)
+        if (user is null)
             return false;
 
         if (user.HasPermission(UserPermission.ModifyAllRatings))

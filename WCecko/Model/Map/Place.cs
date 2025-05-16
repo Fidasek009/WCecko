@@ -22,6 +22,10 @@ public class Place
 
     public string Description { get; set; } = "";
 
+
+    public const int IMAGE_MAX_HEIGHT = 400;
+    public const int IMAGE_MAX_WIDTH = 800;
+
     public string? ImagePath { get; set; }
 
     [Ignore]

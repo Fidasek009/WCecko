@@ -6,18 +6,15 @@ using Mapsui.Styles;
 using Mapsui.Tiling;
 using Mapsui.UI.Maui;
 using System.Diagnostics;
-using Brush = Mapsui.Styles.Brush;
-using Color = Mapsui.Styles.Color;
-
 using WCecko.Model.Rating;
 using WCecko.Model.User;
+using Brush = Mapsui.Styles.Brush;
+using Color = Mapsui.Styles.Color;
 
 
 public class MapService
 {
     public const string POINTS_LAYER_NAME = "user_points";
-    public const int IMAGE_MAX_HEIGHT = 400;
-    public const int IMAGE_MAX_WIDTH = 800;
 
     private readonly MapDatabaseService _mapDatabaseService;
     private readonly RatingDatabaseService _ratingDatabaseService;
@@ -28,7 +25,7 @@ public class MapService
 
     private readonly MemoryLayer _pointsLayer;
 
-    private static readonly int _iconId = RegisterBitmapAsync("poop.png");
+    private static readonly int s_iconId = RegisterBitmapAsync("poop.png");
 
     public MapService(DatabaseService db, UserService userService)
     {
@@ -61,7 +58,7 @@ public class MapService
             System.Reflection.Assembly assembly = typeof(MapService).Assembly;
 
             Stream? stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null)
+            if (stream is null)
             {
                 Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
                 return -1;
@@ -79,14 +76,14 @@ public class MapService
     public async Task<bool> CreatePlaceAsync(MPoint mPoint, string title, string description, ImageSource? image)
     {
         User? user = _userService.CurrentUser;
-        if (user == null)
+        if (user is null)
             return false;
 
         if (!user.HasPermission(UserPermission.CreatePlaces))
             return false;
 
         Place? newPlace = await _mapDatabaseService.CreatePlaceAsync(mPoint, user.Username, title, description, image);
-        if (newPlace == null)
+        if (newPlace is null)
             return false;
 
         AddPointToMap(mPoint, newPlace.Id);
@@ -102,7 +99,7 @@ public class MapService
     private bool CheckModifyPermission(string pointCreator)
     {
         User? user = _userService.CurrentUser;
-        if (user == null)
+        if (user is null)
             return false;
 
         if (user.HasPermission(UserPermission.ModifyAllPlaces))
@@ -117,7 +114,7 @@ public class MapService
     public async Task<bool> DeletePlaceAsync(int id)
     {
         Place? place = await _mapDatabaseService.GetPlaceAsync(id);
-        if (place == null)
+        if (place is null)
             return false;
 
         if (!CheckModifyPermission(place.CreatedBy))
@@ -138,18 +135,18 @@ public class MapService
     public async Task<bool> UpdatePlaceAsync(int id, string title, string description, ImageSource? image)
     {
         Place? existingPlace = await _mapDatabaseService.GetPlaceAsync(id);
-        if (existingPlace == null)
+        if (existingPlace is null)
             return false;
 
         if (!CheckModifyPermission(existingPlace.CreatedBy))
             return false;
 
-        Place newPlace = new Place
+        Place newPlace = new()
         {
             Id = id,
             Title = title,
             Description = description,
-            ImagePath = image != null ? await ImageUtils.SaveImageAsync(image, $"{Guid.NewGuid()}.jpg") : null,
+            ImagePath = image is not null ? await ImageUtils.SaveImageAsync(image, $"{Guid.NewGuid()}.jpg") : null,
             CreatedBy = existingPlace.CreatedBy,
             Location = existingPlace.Location
         };
@@ -191,8 +188,8 @@ public class MapService
     public void RemovePointFromMap(int id)
     {
         List<IFeature> features = _pointsLayer.Features?.ToList() ?? [];
-        IFeature? featureToRemove = features.FirstOrDefault(f => f["ID"] != null && (int)f["ID"] == id);
-        if (featureToRemove == null)
+        IFeature? featureToRemove = features.FirstOrDefault(f => f["ID"] is int featureId && featureId == id);
+        if (featureToRemove is null)
             return;
 
         features.Remove(featureToRemove);
@@ -203,17 +200,17 @@ public class MapService
 
     public static IFeature CreatePoint(MPoint mPoint, int id)
     {
-        PointFeature feature = new PointFeature(mPoint);
+        PointFeature feature = new(mPoint);
         feature["ID"] = id;
 
-        Brush poopColor = new Brush(new Color(100, 69, 40));
+        Brush poopColor = new(new Color(100, 69, 40));
 
 
-        if (_iconId != -1)
+        if (s_iconId != -1)
         {
             feature.Styles.Add(new SymbolStyle
             {
-                BitmapId = _iconId,
+                BitmapId = s_iconId,
                 SymbolScale = 0.25,
                 SymbolOffset = new Offset(0, 64),
             });
