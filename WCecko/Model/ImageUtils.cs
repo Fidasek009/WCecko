@@ -1,7 +1,7 @@
-using Mapsui.Styles;
-using System.Diagnostics;
-
 namespace WCecko.Model;
+
+using Mapsui.Styles;
+
 
 public static class ImageUtils
 {
@@ -62,7 +62,7 @@ public static class ImageUtils
             Stream? stream = assembly.GetManifestResourceStream(resourceName);
             if (stream is null)
             {
-                Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
+                Console.WriteLine($"Failed to load embedded resource: {resourceName}");
                 return -1;
             }
 
@@ -70,7 +70,7 @@ public static class ImageUtils
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error registering bitmap: {ex.Message}");
+            Console.WriteLine($"Error registering bitmap: {ex.Message}");
             return -1;
         }
     }

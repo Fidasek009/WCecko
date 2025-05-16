@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.UI.Maui;
-using System.Diagnostics;
 using WCecko.Model.Map;
 using WCecko.Model.User;
 using WCecko.View;
@@ -76,7 +75,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error in OnMapLongTapped: {ex.Message}");
+            Console.WriteLine($"Error in OnMapLongTapped: {ex.Message}");
             await Shell.Current.DisplayAlert("Error", "An unexpected error occurred while creating the map point.", "OK");
         }
         finally
@@ -112,7 +111,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error in OnMapFeatureInfo: {ex.Message}");
+            Console.WriteLine($"Error in OnMapFeatureInfo: {ex.Message}");
             await Shell.Current.DisplayAlert("Error", "An unexpected error occurred while displaying point information.", "OK");
         }
         finally

@@ -26,8 +26,9 @@ public class MapService
     public const string POINTS_LAYER_NAME = "user_points";
     private readonly MemoryLayer _pointsLayer;
 
-    private static readonly int s_iconId = ImageUtils.RegisterBitmapAsync("poop.png");
-    
+    private static readonly int s_poopIconId = ImageUtils.RegisterBitmapAsync("poop.png");
+    private static readonly Brush s_poopColor = new(new Color(100, 69, 40));
+
     /// <summary>
     /// The map control element used to display the map.
     /// </summary>
@@ -63,7 +64,19 @@ public class MapService
         // disable map rotation (mainly useful for mobile devices)
         Map.Navigator.RotationLock = true;
 
-        Task.Run(AddAllPlacesToMap);
+        Task.Run(InitializeAsync);
+    }
+
+    private async Task InitializeAsync()
+    {
+        try
+        {
+            await AddAllPlacesToMap();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing map: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -128,11 +141,7 @@ public class MapService
             Location = existingPlace.Location
         };
 
-        bool result = await _mapDatabaseService.UpdatePlaceAsync(newPlace);
-        if (!result)
-            return false;
-
-        return true;
+        return await _mapDatabaseService.UpdatePlaceAsync(newPlace);
     }
 
     /// <summary>
@@ -176,7 +185,7 @@ public class MapService
 
         return false;
     }
-    
+
     private async Task AddAllPlacesToMap()
     {
         IReadOnlyList<Place> places = await _mapDatabaseService.GetAllPlacesAsync();
@@ -222,13 +231,11 @@ public class MapService
         PointFeature feature = new(mPoint);
         feature["ID"] = id;
 
-        Brush poopColor = new(new Color(100, 69, 40));
-
-        if (s_iconId != -1)
+        if (s_poopIconId != -1)
         {
             feature.Styles.Add(new SymbolStyle
             {
-                BitmapId = s_iconId,
+                BitmapId = s_poopIconId,
                 SymbolScale = 0.25,
                 SymbolOffset = new Offset(0, 64),
             });
@@ -240,7 +247,7 @@ public class MapService
                 SymbolType = SymbolType.Triangle,
                 SymbolRotation = 180,
                 SymbolScale = 1,
-                Fill = poopColor,
+                Fill = s_poopColor,
                 SymbolOffset = new Offset(0, 16)
             });
         }
