@@ -1,3 +1,6 @@
+using Mapsui.Styles;
+using System.Diagnostics;
+
 namespace WCecko.Model;
 
 public static class ImageUtils
@@ -47,5 +50,28 @@ public static class ImageUtils
         await stream.CopyToAsync(fileStream);
 
         return imagePath;
+    }
+
+    public static int RegisterBitmapAsync(string imageName)
+    {
+        try
+        {
+            string resourceName = $"WCecko.Resources.Images.{imageName}";
+            System.Reflection.Assembly assembly = typeof(ImageUtils).Assembly;
+
+            Stream? stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream is null)
+            {
+                Debug.WriteLine($"Failed to load embedded resource: {resourceName}");
+                return -1;
+            }
+
+            return BitmapRegistry.Instance.Register(stream);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error registering bitmap: {ex.Message}");
+            return -1;
+        }
     }
 }
