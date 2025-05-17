@@ -44,9 +44,7 @@
                 </Grid>
 
                 <VerticalStackLayout Spacing="5">
-                    <Label
-                        Text="Rating (1-5 Stars):"
-                        FontAttributes="Bold" />
+                    <Label Text="Rating (1-5 Stars):" />
                     <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                         <Slider
                             Maximum="5"
@@ -67,9 +65,10 @@
                 <Editor
                     Text="{Binding Comment}"
                     Placeholder="Comment"
+                    SemanticProperties.Hint="Enter your comment about this place"
                     HeightRequest="80"
                     AutoSize="TextChanges"
-                    SemanticProperties.Hint="Enter your comment about this place" />
+                    MaxLength="1000" />
 
             </VerticalStackLayout>
         </ScrollView>

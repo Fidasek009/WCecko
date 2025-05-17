@@ -19,11 +19,19 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     public partial string PlaceName { get; set; } = "";
 
     [ObservableProperty]
+    public partial string PlaceNameBorder { get; set; } = "Transparent";
+
+    [ObservableProperty]
     public partial string PlaceDescription { get; set; } = "";
 
     [ObservableProperty]
     public partial ImageSource? PlaceImage { get; set; }
 
+
+    partial void OnPlaceNameChanged(string value)
+    {
+        PlaceNameBorder = string.IsNullOrWhiteSpace(value) ? "Red" : "Transparent";
+    }
 
     [RelayCommand]
     private async Task Cancel()
@@ -34,6 +42,12 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
     [RelayCommand]
     private async Task Save()
     {
+        if (string.IsNullOrWhiteSpace(PlaceName))
+        {
+            PlaceNameBorder = "Red";
+            return;
+        }
+
         await _popupService.ClosePopupAsync(this);
     }
 
@@ -50,9 +64,10 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
             if (image is null)
                 return;
 
-            using Stream stream = await image.OpenReadAsync();
-            using MemoryStream memoryStream = new();
-            await stream.CopyToAsync(memoryStream);
+            MemoryStream? memoryStream = await ImageUtils.FileToStreamAsync(image);
+            if (memoryStream is null || !ImageUtils.IsValidImage(memoryStream))
+                return;
+
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
         catch (Exception ex)
@@ -71,9 +86,10 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
             if (photo is null)
                 return;
 
-            using Stream stream = await photo.OpenReadAsync();
-            using MemoryStream memoryStream = new();
-            await stream.CopyToAsync(memoryStream);
+            MemoryStream? memoryStream = await ImageUtils.FileToStreamAsync(photo);
+            if (memoryStream is null || !ImageUtils.IsValidImage(memoryStream))
+                return;
+
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
         catch (Exception ex)

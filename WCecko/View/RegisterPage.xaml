@@ -32,7 +32,8 @@
                 <Entry
                    Text="{Binding Username}"
                    Placeholder="Username"
-                   SemanticProperties.Hint="Enter your username" />
+                   SemanticProperties.Hint="Enter your username"
+                   MaxLength="50" />
 
                 <Entry
                     Text="{Binding Password}"

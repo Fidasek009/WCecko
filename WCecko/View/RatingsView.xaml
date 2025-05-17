@@ -150,7 +150,16 @@
                                 Padding="10"
                                 Text="{Binding Comment}"
                                 TextColor="Black"
-                                FontSize="Small" />
+                                FontSize="Small">
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label" 
+                                        Binding="{Binding Comment}" 
+                                        Value="">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
 
                         </Grid>
                     </Frame>

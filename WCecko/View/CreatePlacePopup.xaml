@@ -43,19 +43,23 @@
                         Command="{Binding SaveCommand}" />
                 </Grid>
 
-
-
-                <Entry
-                    Text="{Binding PlaceName}"
-                    Placeholder="Place Name"
-                    SemanticProperties.Hint="Enter the name of the place" />
+                <Frame 
+                    BorderColor="{Binding PlaceNameBorder}"
+                    Padding="0"
+                    HasShadow="False">
+                    <Entry
+                        Text="{Binding PlaceName}"
+                        Placeholder="Place Name"
+                        MaxLength="100" />
+                </Frame>
 
                 <Editor
                     Text="{Binding PlaceDescription}"
                     Placeholder="Place Description"
+                    SemanticProperties.Hint="Enter the description of the place"
                     HeightRequest="100"
                     AutoSize="TextChanges"
-                    SemanticProperties.Hint="Enter the description of the place" />
+                    MaxLength="1000" />
             
                 <HorizontalStackLayout Spacing="{OnIdiom Phone=5, Default=10}">
                     <Label

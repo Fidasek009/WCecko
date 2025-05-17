@@ -1,16 +1,35 @@
 namespace WCecko.Model;
 
 using Mapsui.Styles;
+using SkiaSharp;
 
 
 public static class ImageUtils
 {
     public static readonly string IMAGE_DIR = Path.Combine(FileSystem.AppDataDirectory, "images");
 
+    public static bool IsValidImage(Stream stream)
+    {
+        try
+        {
+            stream.Position = 0;
+            using SKBitmap bitmap = SKBitmap.Decode(stream);
+            return bitmap != null;
+        }
+        catch
+        {
+            return false;
+        }
+        finally
+        {
+            stream.Position = 0;
+        }
+    }
+
     public static ImageSource ResizeImageKeepAspectRatio(Stream inputStream, int maxWidth, int maxHeight)
     {
         inputStream.Position = 0;
-        using SkiaSharp.SKBitmap originalBitmap = SkiaSharp.SKBitmap.Decode(inputStream);
+        using SKBitmap originalBitmap = SKBitmap.Decode(inputStream);
 
         int origWidth = originalBitmap.Width;
         int origHeight = originalBitmap.Height;
@@ -23,9 +42,9 @@ public static class ImageUtils
         int newWidth = (int)(origWidth * ratio);
         int newHeight = (int)(origHeight * ratio);
 
-        using SkiaSharp.SKBitmap resizedBitmap = originalBitmap.Resize(new SkiaSharp.SKImageInfo(newWidth, newHeight), SkiaSharp.SKFilterQuality.High);
-        using SkiaSharp.SKImage image = SkiaSharp.SKImage.FromBitmap(resizedBitmap);
-        byte[] resizedImage = image.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 80).ToArray(); // Compress to 80% quality
+        using SKBitmap resizedBitmap = originalBitmap.Resize(new SKImageInfo(newWidth, newHeight), SKFilterQuality.High);
+        using SKImage image = SKImage.FromBitmap(resizedBitmap);
+        byte[] resizedImage = image.Encode(SKEncodedImageFormat.Jpeg, 80).ToArray(); // Compress to 80% quality
 
         return ImageSource.FromStream(() => new MemoryStream(resizedImage));
     }
@@ -50,6 +69,14 @@ public static class ImageUtils
         await stream.CopyToAsync(fileStream);
 
         return imagePath;
+    }
+
+    public static async Task<MemoryStream?> FileToStreamAsync(FileResult imageFile)
+    {
+        using Stream stream = await imageFile.OpenReadAsync();
+        using MemoryStream memoryStream = new();
+        await stream.CopyToAsync(memoryStream);
+        return memoryStream;
     }
 
     public static int RegisterBitmapAsync(string imageName)
