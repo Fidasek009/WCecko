@@ -17,4 +17,4 @@ Next time nature calls and panic sets in, don’t hold it in — **Pull out WCé
 
 ## Installation
 
-For installation, please refer to the [wiki](https://github.com/Fidasek009/WCecko/wiki)
+For installation, please refer to the [wiki](https://github.com/Fidasek009/WCecko/wiki#installation)
