@@ -8,24 +8,6 @@ public static class ImageUtils
 {
     public static readonly string IMAGE_DIR = Path.Combine(FileSystem.AppDataDirectory, "images");
 
-    public static bool IsValidImage(Stream stream)
-    {
-        try
-        {
-            stream.Position = 0;
-            using SKBitmap bitmap = SKBitmap.Decode(stream);
-            return bitmap != null;
-        }
-        catch
-        {
-            return false;
-        }
-        finally
-        {
-            stream.Position = 0;
-        }
-    }
-
     public static ImageSource ResizeImageKeepAspectRatio(Stream inputStream, int maxWidth, int maxHeight)
     {
         inputStream.Position = 0;
@@ -69,14 +51,6 @@ public static class ImageUtils
         await stream.CopyToAsync(fileStream);
 
         return imagePath;
-    }
-
-    public static async Task<MemoryStream?> FileToStreamAsync(FileResult imageFile)
-    {
-        using Stream stream = await imageFile.OpenReadAsync();
-        using MemoryStream memoryStream = new();
-        await stream.CopyToAsync(memoryStream);
-        return memoryStream;
     }
 
     public static int RegisterBitmapAsync(string imageName)

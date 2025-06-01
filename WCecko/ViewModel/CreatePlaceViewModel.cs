@@ -64,9 +64,9 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
             if (image is null)
                 return;
 
-            MemoryStream? memoryStream = await ImageUtils.FileToStreamAsync(image);
-            if (memoryStream is null || !ImageUtils.IsValidImage(memoryStream))
-                return;
+            using Stream stream = await image.OpenReadAsync();
+            using MemoryStream memoryStream = new();
+            await stream.CopyToAsync(memoryStream);
 
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
@@ -86,9 +86,9 @@ public partial class CreatePlaceViewModel(IPopupService popupService) : Observab
             if (photo is null)
                 return;
 
-            MemoryStream? memoryStream = await ImageUtils.FileToStreamAsync(photo);
-            if (memoryStream is null || !ImageUtils.IsValidImage(memoryStream))
-                return;
+            using Stream stream = await photo.OpenReadAsync();
+            using MemoryStream memoryStream = new();
+            await stream.CopyToAsync(memoryStream);
 
             PlaceImage = ImageUtils.ResizeImageKeepAspectRatio(memoryStream, Place.IMAGE_MAX_HEIGHT, Place.IMAGE_MAX_WIDTH);
         }
